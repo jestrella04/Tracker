@@ -1,0 +1,39 @@
+#reports-print-button,
+#reports-excel-button,
+.actions-btn-group,
+.no-print {
+	display:none;
+}
+
+#tracker-report-table {
+	font-size:8pt;
+	border-collapse: collapse;
+}
+
+#tracker-report-table,
+#tracker-report-table th,
+#tracker-report-table td {
+	border:1px solid #ddd;
+	padding: 0.4em;
+}
+
+.cert-report-table td:first-child { display:none }
+.cert-report-table th:first-child { display:none }
+.cert-report-table td:nth-child(6) { white-space:nowrap }
+.label {
+	display: inline;
+	padding: 0;
+	font-size: inherit;
+	font-weight: inherit;
+	line-height: 1;
+	color: inherit;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	border-radius: 0;
+	background-color: inherit;
+	border:0;
+}
+
+h3 { font-size: 100%; font-weight: 700;}
+h3 small { font-size: 85%; }

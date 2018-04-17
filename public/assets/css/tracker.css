@@ -1,0 +1,98 @@
+@media screen {
+    body {
+        padding-top: 6rem;
+        padding-bottom: 6rem;
+    }
+    .form-signin {
+        max-width: 430px;
+        padding: 15px;
+        margin: 0 auto;
+    }
+    .form-signin .form-signin-heading {
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    .form-signin .input-group {
+        margin-bottom: 0.5rem;
+    }
+    .form-signin .btn {
+        margin-top: 1rem;
+    }
+    #gta-select {
+        margin-bottom: 2rem;
+    }
+    #active-gta .badge {
+        margin-right: 1.5rem;
+    }
+    #active-agents .badge {
+        margin-left: 0.4rem;
+        padding: 0.4rem 0.5rem;
+    }
+    .tracker-online-item {
+        font-size: 120%;
+    }
+    .tracker-online-item .full-name {
+        font-weight: 700;
+    }
+    .tracker-online-item .relative-date-format {
+        font-size: 80%;
+        vertical-align: middle;
+        margin-right: 0.6rem;
+    }
+    .clear-dir-filter,
+    .clear-certifications-filter,
+    .quicklink {
+        cursor: pointer;
+    }
+    .error-404 {
+        font-size: 1500%;
+        font-weight: 900;
+    }
+    .flash-message {
+        z-index: 999;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 2rem;
+    }
+    .nav-link {
+        margin-right: 0.8rem;
+    }
+    .nav-link i {
+        margin-right: 0.4rem;
+    }
+    .footer-copyright {
+        margin-top: 6rem;
+    }
+    .session-last-update {
+        font-size: 80%;
+        font-weight: normal;
+        margin-right: 0.3rem;
+    }
+    .modal-xl {
+        width: 90%;
+        max-width: 1200px;
+    }
+    #admin-reports-table {
+        font-size:90%;
+    }
+    #admin-reports-empty p,
+    #admin-reports-loading .loading-animation {
+        padding: 3rem;
+        text-align: center;
+    }
+    #dir-filter-container {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+    .logo {
+        margin-bottom: 1rem;
+    }
+    .logo img {
+        max-width: 80%;
+        max-height: 100px;
+    }
+    .forgot-password {
+        margin-top: 2rem;
+    }
+}
