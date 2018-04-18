@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header">
-        <h2>
+        <h3>
             <span><?= $settings['company_name']['value'] ?> Tracker</span>
             <?php if ($auth->isUserAllowedStatus('On Call')) : ?>
             <button type="button" id ="quicklink-oncall" class="btn btn-default quicklink float-right d-none" title="Pickup this call">
@@ -13,7 +13,7 @@
                 <i class="fas fa-check"></i>
             </button>
             <?php endif ?>
-        <h2>
+        <h3>
     </div>
 
     <ul id="active-agents" class="list-group list-group-flush"></ul>

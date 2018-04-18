@@ -50,6 +50,22 @@ class ApiController extends BaseController
         return json_encode($op);
     }
 
+    public function postCreateUser(Request $request, Response $response, array $args)
+    {
+        $c = $this->container->get('UserController');
+        $post = $request->getParsedBody();
+        $id = $this->filterString($post['user_id']);
+        $name = $this->filterString($post['user_name']);
+        $email = $this->filterString($post['user_email']);
+        $password = $this->filterString($post['user_password']);
+        $password = password_hash($password, PASSWORD_DEFAULT);
+        $roleId = $this->filterString($post['role_id']);
+        $departmentId = $this->filterString($post['department_id']);
+        $op = $c->postCreateUser($id, $name, $email, $password, $roleId, $departmentId);
+
+        return json_encode($op);
+    }
+
     public function getRole(Request $request, Response $response, array $args)
     {
         $c = $this->container->get('RoleController');

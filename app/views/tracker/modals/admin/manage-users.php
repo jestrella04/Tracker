@@ -12,53 +12,67 @@
 		  </div>
 
 			<div class="modal-body">
+				<div class="d-flex justify-content-center">
+					<div id="admin-usercreate-response" class="d-none text-center alert"></div>
+				</div>
+
 				<form id="admin-usercreate-form" role="form">
 					<fieldset>
 						<div class="form-group row">
-							<label for="emp-userid" class="col-sm-4 col-form-label">User Id:</label>
+							<label for="user-id" class="col-sm-3 col-form-label">User Id:</label>
 
-							<div class="col-sm-8">
-								<input type="text" class="form-control" id="emp-userid" name="emp-userid" placeholder="Enter user id here">
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="user-id" name="user_id" placeholder="Enter user id here" required>
 							</div>
 						</div>
 
 						<div class="form-group row">
-							<label for="emp-username" class="col-sm-4 col-form-label">Full name:</label>
+							<label for="user-name" class="col-sm-3 col-form-label">Full name:</label>
 							
-							<div class="col-sm-8">
-								<input type="text" class="form-control" id="emp-username" name="emp-username" placeholder="Enter user's full name here">
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="user-name" name="user_name" placeholder="Enter user's full name here" required>
 							</div>
 						</div>
 
 						<div class="form-group row">
-							<label for="emp-useremail" class="col-sm-4 col-form-label">Email:</label>
+							<label for="user-email" class="col-sm-3 col-form-label">Email:</label>
 
-							<div class="col-sm-8">
-								<input type="email" class="form-control" id="emp-useremail" name="emp-useremail" placeholder="Enter user's email here">
+							<div class="col-sm-9">
+								<input type="email" class="form-control" id="user-email" name="user_email" placeholder="Enter user's email here" required>
 							</div>
 						</div>
 
 						<div class="form-group row">
-							<label for="emp-password" class="col-sm-4 col-form-label">Password:</label>
+							<label for="user-password" class="col-sm-3 col-form-label">Password:</label>
 
-							<div class="col-sm-8">
-								<input type="password" class="form-control" id="emp-password" name="emp-password" placeholder="Enter user's password here">
+							<div class="col-sm-9">
+								<input type="password" class="form-control" id="user-password" name="user_password" placeholder="Enter user's password here" required>
 							</div>
 						</div>
 
 						<div class="form-group row">
-							<label for="emp-role" class="col-sm-4 col-form-label">Role:</label>
+							<label for="role-id" class="col-sm-3 col-form-label">Role:</label>
 
-							<div class="col-sm-8">
-								<select class="form-control" id="emp-role" name="emp-role"></select>
+							<div class="col-sm-9">
+								<select class="form-control" id="role-id" name="role_id" required>
+									<option value="">--- Select Role ---</option>
+									<?php foreach ($roleList as $idx => $role) : ?>
+									<option value="<?= $role['id'] ?>"><?= $role['name'] ?></option>
+									<?php endforeach ?>
+								</select>
 							</div>
 						</div>
 
 						<div class="form-group row">
-							<label for="emp-dept" class="col-sm-4 col-form-label">Department:</label>
+							<label for="department-id" class="col-sm-3 col-form-label">Department:</label>
 
-							<div class="col-sm-8">
-								<select class="form-control" id="emp-dept" name="emp-dept"></select>
+							<div class="col-sm-9">
+								<select class="form-control" id="department-id" name="department_id" required>
+									<option value="">--- Select Department ---</option>
+									<?php foreach ($departmentList as $idx => $department) : ?>
+									<option value="<?= $department['id'] ?>"><?= $department['name'] ?></option>
+									<?php endforeach ?>
+								</select>
 							</div>
 						</div>
 					</fieldset>
@@ -67,7 +81,7 @@
 
 			<div class="modal-footer">
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" form="admin-usercreate-form">Save changes</button>
+				<button type="submit" class="btn btn-primary" form="admin-usercreate-form">Save changes</button>
 			</div>
 		</div>
 	</div>

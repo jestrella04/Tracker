@@ -54,14 +54,18 @@ class UserController extends BaseController
         return $userAllowedTasks;
     }
 
-    public function postUserCreate()
+    public function postCreateUser($id, $name, $email, $password, $roleId, $departmentId)
     {
+        if (!empty($id) && !empty($name) && !empty($email) && !empty($password) && !empty($roleId) && !empty($departmentId)) {
+            $sp = $this->db->prepare('CALL sp_insert_user(?,?,?,?,?,?,@insertedId)');
+            $sp->execute(array($id, $roleId, $departmentId, $name, $email, $password));
+            $sp->closeCursor();
+            $op = $this->db->query('SELECT @insertedId AS id')->fetch();
 
-    }
+            if ($op) return $op;
+        }
 
-    public function postUserUpdate()
-    {
-
+        return false;
     }
 
     public function postUserPasswordUpdate($id, $passwordHash, $isDefault = 0)

@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 class RoleController extends BaseController
 {
-    public function getRole($id)
+    public function getRole($id = '')
     {
         if (!empty($id)) {
             $sp = $this->db->prepare('CALL sp_select_role(?)');

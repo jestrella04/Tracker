@@ -12,7 +12,7 @@ $app->get('/api/get/users/tasks/{userId}', 'ApiController:getUserTasks');
 $app->get('/api/get/users/status/{userId}', 'ApiController:getUserStatus');
 $app->get('/api/get/users/{userId}', 'ApiController:getUser');
 $app->get('/api/get/users', 'ApiController:getUser');
-//$app->post('/api/insert/users', '');
+$app->post('/api/insert/users', 'ApiController:postCreateUser');
 //$app->post('/api/update/users/{userId}', '');
 //$app->post('/api/update/users/{userId}/password', '');
 

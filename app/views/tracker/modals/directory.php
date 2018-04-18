@@ -24,7 +24,7 @@
 								<input type="text" id="dir-filter-input" class="form-control" placeholder="Filter directory by...">
 
 								<div class="input-group-append">
-									<span class="input-group-text" id="dir-filter-clear">
+									<span class="input-group-text" id="dir-filter-clear" title="Clear applied filter">
 										<i class="fas fa-minus-circle"></i>
 									</span>
 								</div>

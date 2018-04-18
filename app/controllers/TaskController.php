@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 class TaskController extends BaseController
 {
-    public function getTask($id)
+    public function getTask($id = '')
     {
         if (!empty($id)) {
             $sp = $this->db->prepare('CALL sp_select_task(?)');

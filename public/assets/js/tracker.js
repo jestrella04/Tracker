@@ -52,7 +52,7 @@ $(document).ready(function () {
 	}
 
 	// Check if current user has a GTA session
-	function checkCurrentUserGTA () {
+	function checkCurrentUserGTA() {
 		var found = false;
 
 		$.each(trackerGtaSessions, function (idx, gta) {
@@ -414,7 +414,7 @@ $(document).ready(function () {
 		op += '<thead>';
 		op += '	<tr>';
 
-		$.each(headers, function(idx, heading) {
+		$.each(headers, function (idx, heading) {
 			op += '		<th>' + String(heading).toUpperCase().replace('_', ' ') + '</th>';
 		});
 
@@ -423,7 +423,7 @@ $(document).ready(function () {
 
 		return op;
 	}
-	
+
 	// Repprts table content
 	function getReportTableBody(row) {
 		var op = '';
@@ -620,14 +620,14 @@ $(document).ready(function () {
 
 			$.post('api/get/report', formData, function (json) {
 				var parsedJson = $.parseJSON(json);
-				
+
 				if (parsedJson.length) {
-					var headers = $.map(parsedJson[0], function(element,index) {return index});
+					var headers = $.map(parsedJson[0], function (element, index) { return index });
 
 					op += getReportTableHeader(headers);
 					op += '<tbody>';
 
-					$.each(parsedJson, function(idx, report) {
+					$.each(parsedJson, function (idx, report) {
 						op += getReportTableBody(report);
 					});
 
@@ -642,7 +642,7 @@ $(document).ready(function () {
 					$('#reports-excel-button').attr('disabled', 'disabled');
 					$('#reports-print-button').attr('disabled', 'disabled');
 				} else {
-					$('#admin-reports-table').append(op);	
+					$('#admin-reports-table').append(op);
 					$('#admin-reports-empty').addClass('d-none');
 					$('#admin-reports-container').removeClass('d-none');
 					$('#admin-reports-loading').addClass('d-none');
@@ -653,7 +653,7 @@ $(document).ready(function () {
 
 				// Sticky table headers for reports
 				$('#admin-reports-table').stickyTableHeaders();
-			});			
+			});
 		});
 
 		// Admin updating app settings
@@ -662,9 +662,37 @@ $(document).ready(function () {
 
 			e.preventDefault();
 
-			$.post('api/update/settings', formData, function(data) {
+			$.post('api/update/settings', formData, function (data) {
 				$('#admin-settings-modal').modal('hide');
 			});
+		});
+
+		// Admin creating a user
+		$('#admin-usercreate-form').on('submit', function (e) {
+			var formData = preparePostRequest($(this).serialize());
+			var password = $('#user-password').val();
+
+			e.preventDefault();
+
+			$('#admin-usercreate-response').addClass('d-none');
+			$('#admin-usercreate-response').removeClass('alert-danger');
+			$('#admin-usercreate-response').removeClass('alert-success');
+			$('#admin-usercreate-response').empty();
+
+			if (validatePassword(password)) {
+				$.post('api/insert/users', formData, function (data) {
+					if (data.length) {
+						$('#admin-usercreate-response').append('User created successfully');
+						$('#admin-usercreate-response').addClass('alert-success');
+						$('#admin-usercreate-response').removeClass('d-none');
+						$('#admin-usercreate-form')[0].reset();
+					}
+				});
+			} else {
+				$('#admin-usercreate-response').append('Please verify password strenght requirements');
+				$('#admin-usercreate-response').addClass('alert-danger');
+				$('#admin-usercreate-response').removeClass('d-none');
+			}
 		});
 
 		// Directory filters

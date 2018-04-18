@@ -56,13 +56,18 @@ class RenderViewController extends BaseController
         // Get app settings
         $args['settings'] = $this->settings;
 
+        // Role controller
+        $role = $this->container->get('RoleController');
+        $args['roleList'] = $role->getRole();
+
+        // Department controller
+        $department = $this->container->get('DepartmentController');
+        $args['departmentList'] = $department->getDepartment();
+
         // Validate session and load view accordingly
         if ($auth->isDefaultPassword()) {
             return $this->renderer->render($response, 'change-password.php', $args);
         } else {
-            // Create the user session in database
-            //$session->addActiveSession($args['userId']);
-
             return $this->renderer->render($response, 'home.php', $args);
         }
     }

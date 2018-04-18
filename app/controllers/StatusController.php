@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 class StatusController extends BaseController
 {
-    public function getStatus($id)
+    public function getStatus($id = '')
     {
         if (!empty($id)) {
             $sp = $this->db->prepare('CALL sp_select_status(?)');

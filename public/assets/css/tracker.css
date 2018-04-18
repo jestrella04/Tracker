@@ -85,6 +85,9 @@
         margin-top: 1rem;
         margin-bottom: 1rem;
     }
+    #dir-filter-clear {
+        cursor: pointer;
+    }
     .logo {
         margin-bottom: 1rem;
     }
@@ -94,5 +97,8 @@
     }
     .forgot-password {
         margin-top: 2rem;
+    }
+    #admin-usercreate-response {
+        font-weight: 700;
     }
 }
