@@ -22,7 +22,8 @@
         "slim/php-view": "^2.0",
         "monolog/monolog": "^1.17",
         "slim/csrf": "^0.8.2",
-        "phpmailer/phpmailer": "^6.0"
+        "phpmailer/phpmailer": "^6.0",
+        "vlucas/phpdotenv": "^2.4"
     },
     "autoload": {
         "psr-4": {

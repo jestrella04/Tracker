@@ -2,6 +2,10 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+// Load Environment file
+$dotEnv = new \Dotenv\Dotenv(__DIR__ . '/../');
+$dotEnv->load();
+
 // Include common functions
 require __DIR__ . '/common.php';
 
