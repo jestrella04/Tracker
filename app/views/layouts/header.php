@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title><?= $settings['company_name']['value'] ?> Tracker</title>
+		<title>Tracker – <?= $settings['company_name']['value'] ?></title>
         <base href="<?php echo dirname($_SERVER['SCRIPT_NAME']) . '/'; ?>">
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">

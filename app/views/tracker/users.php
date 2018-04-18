@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header">
         <h2>
-            <span>CenPOS Tracker</span>
+            <span><?= $settings['company_name']['value'] ?> Tracker</span>
             <?php if ($auth->isUserAllowedStatus('On Call')) : ?>
             <button type="button" id ="quicklink-oncall" class="btn btn-default quicklink float-right d-none" title="Pickup this call">
                 <i class="fas fa-phone"></i>

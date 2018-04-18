@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="">
             <img src="public/assets/img/logo-nav.png" width="30" height="30" class="d-inline-block align-top" alt="">
             <?= $settings['company_name']['value'] ?>
         </a>
@@ -57,7 +57,7 @@
                         <?php endif; ?>
 
                         <?php if ($auth->isUserAllowedTask('Manage Users')) : ?>
-                        <a class="dropdown-item disabled" href="#" data-toggle="modal" data-target="#admin-users-modal">Users Manager</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#admin-users-modal">Users Manager</a>
                         <?php endif; ?>
 
                         <?php if ($auth->isUserAllowedTask('Change User Status')) : ?>

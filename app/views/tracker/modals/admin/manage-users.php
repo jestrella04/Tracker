@@ -12,21 +12,54 @@
 		  </div>
 
 			<div class="modal-body">
-				<form id="admin-usercreate-form" class="" role="form" method="post" target="_blank">
+				<form id="admin-usercreate-form" role="form">
 					<fieldset>
-						<div class="form-group">
-							<label for="emp-userid">User id:</label>
-							<input type="text" class="form-control" id="emp-userid" name="emp-userid" placeholder="Enter user id here">
+						<div class="form-group row">
+							<label for="emp-userid" class="col-sm-4 col-form-label">User Id:</label>
+
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="emp-userid" name="emp-userid" placeholder="Enter user id here">
+							</div>
 						</div>
 
-						<div class="form-group">
-							<label for="emp-username">User's name:</label>
-							<input type="text" class="form-control" id="emp-username" name="emp-username" placeholder="Enter user's full name here">
+						<div class="form-group row">
+							<label for="emp-username" class="col-sm-4 col-form-label">Full name:</label>
+							
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="emp-username" name="emp-username" placeholder="Enter user's full name here">
+							</div>
 						</div>
 
-						<div class="form-group">
-							<label for="emp-useremail">User's email:</label>
-							<input type="email" class="form-control" id="emp-useremail" name="emp-useremail" placeholder="Enter user's email here">
+						<div class="form-group row">
+							<label for="emp-useremail" class="col-sm-4 col-form-label">Email:</label>
+
+							<div class="col-sm-8">
+								<input type="email" class="form-control" id="emp-useremail" name="emp-useremail" placeholder="Enter user's email here">
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="emp-password" class="col-sm-4 col-form-label">Password:</label>
+
+							<div class="col-sm-8">
+								<input type="password" class="form-control" id="emp-password" name="emp-password" placeholder="Enter user's password here">
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="emp-role" class="col-sm-4 col-form-label">Role:</label>
+
+							<div class="col-sm-8">
+								<select class="form-control" id="emp-role" name="emp-role"></select>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="emp-dept" class="col-sm-4 col-form-label">Department:</label>
+
+							<div class="col-sm-8">
+								<select class="form-control" id="emp-dept" name="emp-dept"></select>
+							</div>
 						</div>
 					</fieldset>
 				</form>
@@ -34,7 +67,7 @@
 
 			<div class="modal-footer">
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-				<button id="admin-usercreate-submit" type="button" class="btn btn-primary">Save changes</button>
+				<button type="button" class="btn btn-primary" form="admin-usercreate-form">Save changes</button>
 			</div>
 		</div>
 	</div>

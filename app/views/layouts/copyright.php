@@ -2,7 +2,7 @@
             <hr>
             <p class="text-muted text-center">
                 <small>
-                    CenPOS, Inc. &copy; 2014 - <?php echo date('Y') ?><br>
+                    <?= $settings['company_name']['value'] ?> &copy; <?= date('Y') ?><br>
                     All rights reserved
                 </small>
             </p>
