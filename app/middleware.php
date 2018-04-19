@@ -20,8 +20,7 @@ $loggedInMiddleware = function (Request $request, Response $response, $next) {
             'login',
             'post-login',
             'forgot-password',
-            'post-forgot-password',
-            'test'
+            'post-forgot-password'
         );
 
         if ($auth->isValidSession()) {

@@ -20,7 +20,7 @@ class StatusController extends BaseController
 
     public function postUpdateStatus($id, $statusId)
     {
-        if (!empty($id) && !empty(statusId)) {
+        if (!empty($id) && !empty($statusId)) {
             $sp = $this->db->prepare('CALL sp_update_session_user_status_change(?,?)');
             $sp->execute(array($id, $statusId));
             $op = array('info'=>'Session updated successfully.');

@@ -55,7 +55,7 @@ class BaseController
             // Clear message so that it is not available in future loads
             $_SESSION['flash_message'] = array();
 
-            // Reurn the capture session message
+            // Return the capture session message
             if (is_array($flash) && !empty($flash)) {
                 return $flash;
             }
@@ -124,24 +124,29 @@ class BaseController
 
     protected function sendMail($toName, $toEmail, $subject, $message)
     {
-        $mail = new PHPMailer();                              // Passing `true` enables exceptions
+        $mail = new PHPMailer();
+        $mailMethod = null !== getenv('MAIL_METHOD') ? getenv('MAIL_METHOD') : 'Mail';
 
         try {
-            //Server settings
-            $mail->isSMTP();                                      // Set mailer to use SMTP
-            $mail->Host = 'smtp1.example.com;smtp2.example.com';  // Specify main and backup SMTP servers
-            $mail->SMTPAuth = true;                               // Enable SMTP authentication
-            $mail->Username = 'user@example.com';                 // SMTP username
-            $mail->Password = 'secret';                           // SMTP password
-            $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-            $mail->Port = 587;                                    // TCP port to connect to
+            if ('smtp' == strtolower($mailMethod)) {
+                // SMTP Server settings
+                $mail->isSMTP();
+                $mail->Host = getenv('SMTP_HOST');
+                $mail->SMTPAuth = true;
+                $mail->Username = getenv('SMTP_USER');
+                $mail->Password = getenv('SMTP_PASS');
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = getenv('SMTP_PORT');
+            } else if ('mail' == strtolower($mailMethod)) {
+                $mail->isMail();
+            }
 
             //Recipients
             $mail->setFrom('from@example.com', 'Mailer');
-            $mail->addAddress($toEmail, $toName);     // Add a recipient
+            $mail->addAddress($toEmail, $toName);
 
             //Content
-            $mail->isHTML(true);                                  // Set email format to HTML
+            $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->Body = $message;
             //$mail->AltBody = '';

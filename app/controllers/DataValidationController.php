@@ -29,6 +29,10 @@ class DataValidationController extends BaseController
                 // Redirect to the change password page
                 $response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/change-password');
             } else {
+                // Create the session in database before redirect
+                $session = $this->container->get('SessionController');
+                $session->addActiveSession($user['id']);
+
                 // Redirect to the home page
                 $response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/');
             }
@@ -67,11 +71,15 @@ class DataValidationController extends BaseController
             // Post a flash message
             $this->postFlashMessage('success', 'Password was successfully updated.');
 
-            // Redirect back to the home page
-            $response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/');
+            // Remove user from session and redirect back to the login page
+            unset($_SESSION['tracker_userid']);
+            unset($_SESSION['tracker_date_created']);
+            unset($_SESSION['tracker_date_updated']);
+
+            $response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/login');
         } else {
             // Invalid information. Let's add a flash message
-            $this->postFlashMessage('danger', 'Invalid credentials. Please try again.');
+            $this->postFlashMessage('danger', 'Invalid original password.');
 
             // Redirect back to the change password page
             $response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/change-password');

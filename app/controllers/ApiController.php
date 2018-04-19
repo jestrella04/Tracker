@@ -100,12 +100,13 @@ class ApiController extends BaseController
         return json_encode($user->getUser($id));
     }
 
-    public function postUpdateSession(Request $request, Response $response, array $args)
+    public function postUpdateSessionActivity(Request $request, Response $response, array $args)
     {
         $id = $_SESSION['tracker_userid'];
         $session = $this->container->get('SessionController');
+        $op = $session->updateUserSessionActivity($id);
 
-        return json_encode($session->addActiveSession($id));
+        return json_encode($op);
     }    
 
     public function getStatus(Request $request, Response $response, array $args)

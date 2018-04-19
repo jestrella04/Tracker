@@ -26,7 +26,7 @@ $app->get('/api/get/roles', 'ApiController:getRole');
 /* Session */
 $app->get('/api/get/session', 'ApiController:getActiveSession');
 $app->get('/api/get/session/user', 'ApiController:getSessionUser');
-$app->post('/api/update/session', 'ApiController:postUpdateSession');
+$app->post('/api/update/session/activity', 'ApiController:postUpdateSessionActivity');
 
 /* Status */
 $app->get('/api/get/status/{statusId}', 'ApiController:getStatus');

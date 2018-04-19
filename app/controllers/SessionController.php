@@ -12,7 +12,7 @@ class SessionController extends BaseController
         return $op;
     }
 
-    private function updateSession()
+    private function updateSessionCleanReorder()
     {
         $sp = $this->db->prepare('CALL `sp_update_session_clean_reorder`();');
         $sp->execute();
@@ -23,7 +23,13 @@ class SessionController extends BaseController
         $sp = $this->db->prepare('CALL `sp_insert_session`(?);');
         $sp->execute(array($id));
         
-        $this->updateSession();
+        $this->updateSessionCleanReorder();
+    }
+
+    public function updateUserSessionActivity($id)
+    {
+        $sp = $this->db->prepare('CALL `sp_update_user_session_activity`(?);');
+        $sp->execute(array($id));
     }
 
     public function removeActiveSession($id)
@@ -31,7 +37,7 @@ class SessionController extends BaseController
         $sp = $this->db->prepare('CALL `sp_delete_session`(?);');
         $sp->execute(array($id));
 
-        $this->updateSession();
+        $this->updateSessionCleanReorder();
     }
 
     public function updateActiveSessionStatus($id, $status)
@@ -39,6 +45,6 @@ class SessionController extends BaseController
         $sp = $this->db->prepare('CALL `sp_update_session_user_status_change`(?);');
         $sp->execute(array($id, $status));
 
-        $this->updateSession();
+        $this->updateSessionCleanReorder();
     }
 }

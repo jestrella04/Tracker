@@ -149,7 +149,7 @@ $(document).ready(function () {
 	function updateSessionActivity() {
 		var postData = preparePostRequest('uno=1');
 
-		$.post('api/update/session', postData);
+		$.post('api/update/session/activity', postData);
 	}
 
 	// Get directory phone numbers
@@ -711,9 +711,12 @@ $(document).ready(function () {
 			var pass2 = $('#password2').val();
 			var pass3 = $('#password3').val();
 
-			if (pass2 !== pass3 || !validatePassword(pass2) || !validatePassword(pass3)) {
+			if (pass2 !== pass3) {
 				e.preventDefault();
-				alert('Please verify password strenght requirements.');
+				alert('Please make sure you typed your new password correctly.');
+			} else if (!validatePassword(pass2) || !validatePassword(pass3)) {
+				e.preventDefault();
+				alert('Please verify the password strenght requirements.');
 			}
 		});
 

@@ -38,7 +38,7 @@
 
 		<p class="form-text text-muted text-center">
 			Your password must be at least 8 characters long, contain a capital letter,
-			a lowercase letter, a number and one of the folloging special characters
+			a lowercase letter, a number, and one of the following special characters
 			<strong>!@#$%^&*</strong>
 		</p>
 
