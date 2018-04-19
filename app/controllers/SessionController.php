@@ -12,7 +12,7 @@ class SessionController extends BaseController
         return $op;
     }
 
-    private function updateSessionCleanReorder()
+    public function updateSessionCleanReorder()
     {
         $sp = $this->db->prepare('CALL `sp_update_session_clean_reorder`();');
         $sp->execute();

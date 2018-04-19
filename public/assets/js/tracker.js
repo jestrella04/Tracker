@@ -105,14 +105,20 @@ $(document).ready(function () {
 		$('#active-agents').empty();
 
 		$.each(trackerOnlineUsers, function (row, session) {
-			var gta = trackerGtaSessions.filter(function (data) { return data.value == session.id_user });
+			var gta;
+			
+			if (trackerGtaSessions) {
+				gta = trackerGtaSessions.filter(function (data) { return data.value == session.id_user });
+			}
 
 			onlineUsers += '<li class="list-group-item tracker-online-item">';
 			onlineUsers += '	<span class="full-name" data-userid="' + session.id_user + '">' + session.user_name + '</span>';
 			onlineUsers += '	<span class="badge badge-status ' + getStatusBadge(session.priority) + ' float-right">' + session.status_name + '</span>';
 
-			if (gta.length) {
-				onlineUsers += '	<span class="badge badge-gta badge-primary float-right">' + gta[0].name + '</span>';
+			if (gta) {
+				if (gta.length) {
+					onlineUsers += '	<span class="badge badge-gta badge-primary float-right">' + gta[0].name + '</span>';
+				}
 			}
 
 			onlineUsers += '	<span class="relative-date-format text-muted float-right" data-last-update="' + session.date_last_status_change + '"></span>';
@@ -201,6 +207,22 @@ $(document).ready(function () {
 		});
 	}
 
+	// Verify session is active in database
+	function isSessionActive(userId) {
+		var found = false;
+
+		getOnlineUsers();
+
+		$.each(trackerOnlineUsers, function (idx, user) {
+			if (userId == user.id_user) {
+				found = true;
+				return false;
+			}
+		});
+
+		return found;
+	}
+
 	// Get current session information
 	function getCurrentSession() {
 		$.ajax({
@@ -218,7 +240,7 @@ $(document).ready(function () {
 		getCurrentSession();
 
 		if (trackerUser) {
-			if (!trackerUser.id) {
+			if (!isSessionActive(trackerUser.id)) {
 				window.location.replace('logout');
 				return false;
 			} else {
@@ -486,8 +508,11 @@ $(document).ready(function () {
 
 		// Every minute, check session is still active and reload data
 		trackerSessionTimer = setInterval(function () {
-			checkCurrentSession();
-			trackerUpdateAll();
+			var currentSession = checkCurrentSession();
+
+			if (currentSession) {
+				trackerUpdateAll();
+			}
 		}, 60000);
 
 		// Every 5 minutes, display queue order to support agents

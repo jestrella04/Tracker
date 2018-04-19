@@ -4,6 +4,9 @@
 /* API calls */
 /* --------- */
 
+/* Cron jobs */
+
+
 /* Config */
 $app->post('/api/update/settings', 'ApiController:postUpdateConfig');
 
@@ -27,6 +30,7 @@ $app->get('/api/get/roles', 'ApiController:getRole');
 $app->get('/api/get/session', 'ApiController:getActiveSession');
 $app->get('/api/get/session/user', 'ApiController:getSessionUser');
 $app->post('/api/update/session/activity', 'ApiController:postUpdateSessionActivity');
+$app->get('/api/update/session/clean', 'ApiController:getSessionCleanReorder')->setName('session-clean');
 
 /* Status */
 $app->get('/api/get/status/{statusId}', 'ApiController:getStatus');

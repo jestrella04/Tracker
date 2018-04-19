@@ -107,7 +107,15 @@ class ApiController extends BaseController
         $op = $session->updateUserSessionActivity($id);
 
         return json_encode($op);
-    }    
+    }
+    
+    public function getSessionCleanReorder(Request $request, Response $response, array $args)
+    {
+        $session = $this->container->get('SessionController');
+        $op = $session->updateSessionCleanReorder();
+
+        return json_encode($op);
+    }
 
     public function getStatus(Request $request, Response $response, array $args)
     {
