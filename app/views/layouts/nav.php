@@ -44,24 +44,32 @@
                 <?php if ($auth->isUserAllowedTask('Configuration') || $auth->isUserAllowedTask('Reports') || $auth->isUserAllowedTask('Manage Users') || $auth->isUserAllowedTask('Change User Status')) : ?>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-user-secret"></i>Administrator
+                        <i class="fab fa-superpowers"></i> Administrator
                     </a>
 
                     <div class="dropdown-menu" aria-labelledby="dropdown01">
                         <?php if ($auth->isUserAllowedTask('Configuration')) : ?>
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#admin-settings-modal">Configuration</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#admin-settings-modal">
+                            <i class="fas fa-cogs fa-fw"></i> Configuration
+                        </a>
                         <?php endif; ?>
 
                         <?php if ($auth->isUserAllowedTask('Reports')) : ?>
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#admin-reports-modal">Reporting Tools</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#admin-reports-modal">
+                            <i class="fas fa-file fa-fw"></i> Reporting Tools
+                        </a>
                         <?php endif; ?>
 
                         <?php if ($auth->isUserAllowedTask('Manage Users')) : ?>
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#admin-users-modal">Users Manager</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#admin-users-modal">
+                            <i class="fas fa-users fa-fw"></i> Users Manager
+                        </a>
                         <?php endif; ?>
 
                         <?php if ($auth->isUserAllowedTask('Change User Status')) : ?>
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#admin-session-modal">Session Manager</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#admin-session-modal">
+                            <i class="fas fa-server fa-fw"></i> Session Manager
+                        </a>
                         <?php endif; ?>
                     </div>
                 </li>

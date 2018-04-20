@@ -1,8 +1,13 @@
 <?php
 
+// Initialize PHP session
 session_start();
 
-require __DIR__ . '/../app/bootstrap.php';
+// Define absolute root path
+define(ROOT_PATH, dirname(dirname(__FILE__)));
 
-// Run app
+// Require application bootstrap file
+require ROOT_PATH . '/app/bootstrap.php';
+
+// Run the application
 $app->run();

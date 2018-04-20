@@ -1,4 +1,4 @@
 <?php
 
-include __DIR__ . '/../app/routes/api.php';
-include __DIR__ . '/../app/routes/frontend.php';
+include ROOT_PATH . '/app/routes/api.php';
+include ROOT_PATH . '/app/routes/frontend.php';

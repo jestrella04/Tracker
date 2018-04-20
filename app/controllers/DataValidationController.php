@@ -13,7 +13,7 @@ class DataValidationController extends BaseController
         $data = $request->getParsedBody();
         $user = array();
 
-        $user['id'] = $this->filterString($data['userid']);
+        $user['id'] = $this->filterString(strtolower($data['userid']));
         $user['password'] = $this->filterString($data['password']);
 
         $auth->setUserId($user['id']);
@@ -55,7 +55,7 @@ class DataValidationController extends BaseController
         $data = $request->getParsedBody();
         $pass = array();
 
-        $pass['id'] = $this->filterString($data['user_id']);
+        $pass['id'] = $this->filterString(strtolower($data['user_id']));
         $pass['password1'] = $this->filterString($data['password1']);
         $pass['password2'] = $this->filterString($data['password2']);
         $pass['password3'] = $this->filterString($data['password3']);

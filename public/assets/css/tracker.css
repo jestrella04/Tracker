@@ -58,7 +58,8 @@
     .nav-link {
         margin-right: 0.8rem;
     }
-    .nav-link i {
+    .nav-link i,
+    .nav-item .dropdown-menu .dropdown-item i {
         margin-right: 0.4rem;
     }
     .footer-copyright {

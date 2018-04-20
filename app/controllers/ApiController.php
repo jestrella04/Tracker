@@ -54,7 +54,7 @@ class ApiController extends BaseController
     {
         $c = $this->container->get('UserController');
         $post = $request->getParsedBody();
-        $id = $this->filterString($post['user_id']);
+        $id = $this->filterString(strtolower($post['user_id']));
         $name = $this->filterString($post['user_name']);
         $email = $this->filterString($post['user_email']);
         $password = $this->filterString($post['user_password']);

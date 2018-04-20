@@ -214,24 +214,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`jon`@`localhost`*/ /*!50003 TRIGGER `Tracker`.`session_BEFORE_UPDATE` BEFORE UPDATE ON `session` FOR EACH ROW
-BEGIN
-	SET NEW.`date_last_activity` = NOW();
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `status`
@@ -373,7 +355,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_delete_session_inactive`()
 BEGIN
-	DELETE FROM `session` WHERE `id_status` = 9 AND `date_last_activity` < DATE_SUB(NOW(), INTERVAL 15 MINUTE);
+	DELETE FROM `session` WHERE `id_status` = 9 AND `date_last_activity` < DATE_SUB(NOW(), INTERVAL (SELECT `value` FROM `config` WHERE `id` = 'session_timeout_delete') MINUTE);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1633,13 +1615,13 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_update_session_set_inactive`()
-BEGIN	
+BEGIN    
     DECLARE done INT DEFAULT 0;
     DECLARE userId VARCHAR(45);
 	DECLARE cur CURSOR FOR
 
 	SELECT `id_user` FROM `session`
-	WHERE `id_status` <> 9 AND `date_last_activity` < DATE_SUB(NOW(), INTERVAL 10 MINUTE);
+	WHERE `id_status` <> 9 AND `date_last_activity` < DATE_SUB(NOW(), INTERVAL (SELECT `value` FROM `config` WHERE `id` = 'session_timeout') MINUTE);
 
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
@@ -1771,4 +1753,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-19 18:01:58
+-- Dump completed on 2018-04-20 14:30:27

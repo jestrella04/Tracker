@@ -106,7 +106,7 @@ $(document).ready(function () {
 
 		$.each(trackerOnlineUsers, function (row, session) {
 			var gta;
-			
+
 			if (trackerGtaSessions) {
 				gta = trackerGtaSessions.filter(function (data) { return data.value == session.id_user });
 			}
@@ -235,20 +235,24 @@ $(document).ready(function () {
 		});
 	}
 
-	// Verify current session is still active, otherwise log user out
+	// Verify current session is still active
 	function checkCurrentSession() {
+		var isValidSession = false;
+
 		getCurrentSession();
 
 		if (trackerUser) {
-			if (!isSessionActive(trackerUser.id)) {
-				window.location.replace('logout');
-				return false;
-			} else {
-				return true;
+			if (isSessionActive(trackerUser.id)) {	
+				isValidSession = true;
 			}
-		} else {
-			return false;
 		}
+
+		return isValidSession;
+	}
+
+	// End the current session
+	function sessionLogout() {
+		window.location.replace('logout');
 	}
 
 	// Get current user permissions
@@ -390,18 +394,18 @@ $(document).ready(function () {
 		var shortDateFormat = 'dd/MM/yyyy';
 		var longDateFormat = 'dd/MM/yyyy HH:mm:ss';
 
-		$(".short-date-format").each(function (idx, elem) {
+		/*$(".short-date-format").each(function (idx, elem) {
 
 		});
 
 		$(".long-date-format").each(function (idx, elem) {
 
-		});
+		});*/
 
-		$(".relative-date-format").each(function (idx, elem) {
+		$('.relative-date-format').each(function (idx, elem) {
 			var date = $(elem).attr('data-last-update');
 
-			if ($(elem).is(":input")) {
+			if ($(elem).is(':input')) {
 				$(elem).val(moment(date).fromNow());
 			} else {
 				$(elem).text(moment(date).fromNow());
@@ -512,6 +516,8 @@ $(document).ready(function () {
 
 			if (currentSession) {
 				trackerUpdateAll();
+			} else {
+				sessionLogout();
 			}
 		}, 60000);
 
