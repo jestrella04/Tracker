@@ -1150,8 +1150,13 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_session`()
+CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_session`(
+	IN userId VARCHAR(45)
+)
 BEGIN
+	SET @inQueue = (SELECT `inqueue` FROM `department` WHERE `department`.`id` = (SELECT `id_department` FROM `user` WHERE `user`.`id` = userId));
+	SET @listAll = (SELECT `enabled` FROM `role_allowed_task` WHERE `id_role` = (SELECT `id_role` FROM `user` WHERE `id` = userId) AND `id_task` = 5);
+    
 	SELECT 
 		s1.`id_user`, 
         s1.`id_status`, 
@@ -1163,7 +1168,14 @@ BEGIN
         s1.`date_last_activity`, 
         s1.`date_last_status_change`, 
         s1.`queued`
-	FROM (SELECT * FROM `session`) AS s1
+	FROM (
+		SELECT * FROM `session` WHERE (
+		CASE
+			WHEN @listAll > 0 THEN `id_user` IS NOT NULL
+			WHEN @inQueue > 0 THEN `id_user` IN (SELECT `id` FROM `user` WHERE `id_department` IN (SELECT `id` FROM `department` WHERE `inqueue` > 0))
+			WHEN @inQueue = 0 THEN `id_user` IN (SELECT `id` FROM `user` WHERE `id_department` = (SELECT `id_department` FROM `user` WHERE `id` = userId))
+		END
+	)) AS s1
 	LEFT JOIN(SELECT `id`, `name`, `priority` FROM `status`) AS s2
 	ON s1.`id_status` = s2.`id`
     LEFT JOIN(SELECT `id`, `name` FROM `user`) AS s3
@@ -1753,4 +1765,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-20 14:30:27
+-- Dump completed on 2018-04-23 15:23:00
