@@ -1,6 +1,7 @@
 $(document).ready(function () {
 	// Global variables
 	var trackerUser;
+	var trackerUserDept;
 	var trackerUserPermissions;
 	var trackerInitialData = 0;
 	var trackerSessionTimer;
@@ -233,6 +234,17 @@ $(document).ready(function () {
 				trackerUser = json;
 			}
 		});
+
+		if (trackerUser) {
+			$.ajax({
+				url: 'api/get/departments/' + trackerUser.id_department,
+				async: false,
+				dataType: 'json',
+				success: function (json) {
+					trackerUserDept = json;
+				}
+			});
+		}
 	}
 
 	// Verify current session is still active
@@ -248,6 +260,18 @@ $(document).ready(function () {
 		}
 
 		return isValidSession;
+	}
+
+	// Check if user is in the queue group
+	function isDepartmentInQueue()
+	{
+		var inqueue = parseInt(trackerUserDept.inqueue);
+		
+		if (inqueue > 0) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// End the current session
@@ -484,6 +508,9 @@ $(document).ready(function () {
 		return isValid;
 	}
 
+	// Enable the forms
+	$('.form-signin fieldset').attr('disabled', false);
+
 	// Check if the user is logged in
 	if (checkCurrentSession()) {
 		// User is logged in, get permissions
@@ -521,8 +548,8 @@ $(document).ready(function () {
 			}
 		}, 60000);
 
-		// Every 5 minutes, display queue order to support agents
-		if (checkCurrentUserPermission('Call Center')) {
+		// Every 5 minutes, display queue order
+		if (isDepartmentInQueue()) {
 			trackerQueue = setInterval(function () {
 				var innerHtml = '\n';
 				var max = 5;

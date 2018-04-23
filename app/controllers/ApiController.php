@@ -87,7 +87,8 @@ class ApiController extends BaseController
     public function getActiveSession(Request $request, Response $response, array $args)
     {
         $c = $this->container->get('SessionController');
-        $op = $c->getActiveSession();
+        $userId = $_SESSION['tracker_userid'];
+        $op = $c->getActiveSession($userId);
 
         return json_encode($op);
     }

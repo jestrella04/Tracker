@@ -9,11 +9,11 @@
 		<meta name="description" content="Workforce tracker for <?= $settings['company_name']['value'] ?>">
 		<meta name="author" content="Jonathan Estrella">
 		<meta name="mobile-web-app-capable" content="yes">
-		<link rel="icon" sizes="196x196" href="public/assets/img/favicon.png" type="image/png">
-        <link href="public/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="public/assets/font-awesome/css/fontawesome.min.css" rel="stylesheet">
-        <link href="public/assets/font-awesome/css/fontawesome-all.min.css" rel="stylesheet">
-        <link href="public/assets/css/tracker.css" rel="stylesheet">
+		<link rel="icon" sizes="196x196" href="assets/img/favicon.png" type="image/png">
+        <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="assets/font-awesome/css/fontawesome.min.css" rel="stylesheet">
+        <link href="assets/font-awesome/css/fontawesome-all.min.css" rel="stylesheet">
+        <link href="assets/css/tracker.css" rel="stylesheet">
 	</head>
 
 	<body>

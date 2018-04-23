@@ -18,6 +18,10 @@
 
 				<form id="admin-usercreate-form" role="form">
 					<fieldset>
+						<legend>
+							<p class="lead text-muted">Create a new user</p>
+						</legend>
+
 						<div class="form-group row">
 							<label for="user-id" class="col-sm-3 col-form-label">User Id:</label>
 

@@ -4,9 +4,10 @@ namespace App\Controllers;
 
 class SessionController extends BaseController
 {
-    public function getActiveSession()
+    public function getActiveSession($userId)
     {
-        $sp = $this->db->query('CALL sp_select_session()');
+        $sp = $this->db->prepare('CALL `sp_select_session`(?)');
+        $sp->execute(array($userId));
         $op = $sp->fetchAll();
 
         return $op;
