@@ -53,37 +53,46 @@ class DataValidationController extends BaseController
         $session = $this->container->get('SessionController');
         $user = $this->container->get('UserController');
         $data = $request->getParsedBody();
+        $path = '/change-password';
+        $message = array();
         $pass = array();
 
-        $pass['id'] = $this->filterString(strtolower($data['user_id']));
+        $pass['user_id'] = $this->filterString(strtolower($data['user_id']));
         $pass['password1'] = $this->filterString($data['password1']);
         $pass['password2'] = $this->filterString($data['password2']);
         $pass['password3'] = $this->filterString($data['password3']);
 
-        $auth->setUserId($pass['id']);
+        $auth->setUserId($pass['user_id']);
         $auth->setUserPassword($pass['password1']);
-        
-        if ($auth->isValidUser() && $auth->isValidPassword() && $pass['password2'] === $pass['password3']) {
+
+        if (!$auth->isValidUser() || !$auth->isValidPassword()) {
+            // Original username and/or password is invalid
+            $message = array('danger', 'Invalid original password.');
+        } else if ($pass['password2'] !== $pass['password3']) {
+            // New password combination does not match
+            $message = array('danger', 'New password combination does not match.');
+        } else if (!validatePassword($pass['password2']) || !validatePassword($pass['password3'])) {
+            // New password does not meet the password strenght policies
+            $message = array('danger', 'Please verify the password strenght requirements.');
+        } else {
             // Proceed to change password
             $hash = password_hash($pass['password2'], PASSWORD_DEFAULT);
-            $user->postUserPasswordUpdate($pass['id'], $hash);
-
-            // Post a flash message
-            $this->postFlashMessage('success', 'Password was successfully updated.');
+            $user->postUserPasswordUpdate($pass['user_id'], $hash);
 
             // Remove user from session and redirect back to the login page
             unset($_SESSION['tracker_userid']);
             unset($_SESSION['tracker_date_created']);
             unset($_SESSION['tracker_date_updated']);
 
-            $response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/login');
-        } else {
-            // Invalid information. Let's add a flash message
-            $this->postFlashMessage('danger', 'Invalid original password.');
-
-            // Redirect back to the change password page
-            $response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/change-password');
+            $message = array('success', 'Password was successfully updated.');
+            $path = '/login';
         }
+
+        // Post the corresponding flash message
+        $this->postFlashMessage($message[0], $message[1]);
+
+        // Redirect the user accordingly
+        $response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . $path);
 
         return $response;
     }
@@ -95,7 +104,7 @@ class DataValidationController extends BaseController
         $email = $this->filterString($data['recovery_email']);
 
         $validUser = $user->getUserByEmail($email);
-        
+
         if (!empty($validUser['id'])) {
             // Reset password and redirect to the login page
             $reset = $user->postResetPassword($validUser['id']);
@@ -109,8 +118,8 @@ class DataValidationController extends BaseController
             }
         } else {
            // Redirect to the forgot password page
-           $this->postFlashMessage('danger', 'The provided email address is not associated with any user.');
-           $response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/forgot-password'); 
+            $this->postFlashMessage('danger', 'The provided email address is not associated with any user.');
+            $response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/forgot-password');
         }
 
         return $response;
@@ -123,11 +132,11 @@ class DataValidationController extends BaseController
         $session->removeActiveSession($userId);
 
         // Clear all session variables
-		session_unset();
+        session_unset();
 
 		// Destroy the session
         session_destroy();
-        
+
         return $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/login');
     }
 }

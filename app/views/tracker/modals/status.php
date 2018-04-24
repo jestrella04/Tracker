@@ -13,7 +13,9 @@
 				<div class="modal-body">
 					<form id="status-update" role="form">
 						<fieldset>
-							<legend>Select your current status:</legend>
+							<legend>
+								<p class="lead text-muted">Select your current status:</p>
+							</legend>
 							
 							<?php foreach ($user->getUserAllowedStatus($userId) as $row => $data) :?>
 							<div class="form-check">

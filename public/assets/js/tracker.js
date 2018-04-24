@@ -488,24 +488,9 @@ $(document).ready(function () {
 		return op;
 	}
 
-	// Pre-validate password
-	function validatePassword(pass) {
-		/**
-		 * Password validation RegEx for JavaScript
-		 * 
-		 * Passwords must be 
-		 * - At least 8 characters long, max length anything
-		 * - Include at least 1 lowercase letter
-		 * - 1 capital letter
-		 * - 1 number
-		 * - 1 special character => !@#$%^&*
-		 *
-		 * @author Harish Chaudhari <harishchaudhari.com>
-		 * 
-		 */
-		var isValid = /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/.test(pass);
-
-		return isValid;
+	// Validate password strenght
+	function validatePassword(password) {
+		return /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/.test(password);
 	}
 
 	// Enable the forms
@@ -761,21 +746,6 @@ $(document).ready(function () {
 		// User clicking on button to clear applied filter on directory
 		$('#dir-filter-clear').on('click', function () {
 			$('#dir-filter-input').val('').focus().trigger('click');
-		});
-
-		// User is changing password after a successful login with the default one
-		$('#password-update-form').on('submit', function (e) {
-			var pass1 = $('#password1').val();
-			var pass2 = $('#password2').val();
-			var pass3 = $('#password3').val();
-
-			if (pass2 !== pass3) {
-				e.preventDefault();
-				alert('Please make sure you typed your new password correctly.');
-			} else if (!validatePassword(pass2) || !validatePassword(pass3)) {
-				e.preventDefault();
-				alert('Please verify the password strenght requirements.');
-			}
 		});
 
 		// Print a report

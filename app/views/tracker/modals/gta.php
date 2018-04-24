@@ -14,7 +14,9 @@
 				<div class="modal-body">
 					<form id="gta-select" role="form">
 						<fieldset>
-							<legend>I am currently using:</legend>
+							<legend>
+								<p class="lead text-muted">I am currently using:</p>
+							</legend>
 							<div id="gta-form-radios"></div>
 							<input type="hidden" name="type_id" value="4">
 							<input type="hidden" name="value_val" value="<?= $userId ?>">
