@@ -84,13 +84,23 @@ class UserController extends BaseController
         $reset = $this->postUserPasswordUpdate($id, $randomPasswordHash, 1);
 
         if ($reset) {
-            $message = 'Your new password is: ' . $randomPassword;
+            $template = 'password-reset.html';
+
+            $replace = array(
+                '{{USER_NAME}}' => $user['name'],
+                '{{COMPANY_NAME}}' => $this->settings['company_name']['value'],
+                '{{NEW_PASSWORD}}' => $randomPassword,
+                '{{CURRENT_YEAR}}' => date('Y')
+            );
+            
+            $toName = $user['name'];
+            $toEmail = $user['email'];
             $subject = 'Tracker - Password Reset';
-            $to = $user['email'];
+            $message = prepareEmailTemplate($template, $replace);
 
-            $this->sendMail($to, $subject, $message);
-
-            return true;
+            if ($this->sendMail($toName, $toEmail, $subject, $message)) {
+                return true;
+            }
         }
 
         return false;
