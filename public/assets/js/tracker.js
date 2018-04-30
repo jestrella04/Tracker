@@ -657,8 +657,8 @@ $(document).ready(function () {
 
 			e.preventDefault();
 
+			$('#admin-reports-modal').loading();
 			$('#admin-reports-empty').addClass('d-none');
-			$('#admin-reports-loading').removeClass('d-none');
 			$('#admin-reports-table').empty();
 
 			$.post('api/get/report', formData, function (json) {
@@ -680,7 +680,7 @@ $(document).ready(function () {
 				if (0 === op.length) {
 					$('#admin-reports-empty').removeClass('d-none');
 					$('#admin-reports-container').addClass('d-none');
-					$('#admin-reports-loading').addClass('d-none');
+					$('#admin-reports-modal').loading('stop');
 
 					$('#reports-excel-button').attr('disabled', 'disabled');
 					$('#reports-print-button').attr('disabled', 'disabled');
@@ -688,7 +688,7 @@ $(document).ready(function () {
 					$('#admin-reports-table').append(op);
 					$('#admin-reports-empty').addClass('d-none');
 					$('#admin-reports-container').removeClass('d-none');
-					$('#admin-reports-loading').addClass('d-none');
+					$('#admin-reports-modal').loading('stop');
 
 					$('#reports-excel-button').attr('disabled', false);
 					$('#reports-print-button').attr('disabled', false);
@@ -705,36 +705,65 @@ $(document).ready(function () {
 
 			e.preventDefault();
 
+			$('#admin-settings-modal').loading();
+
 			$.post('api/update/settings', formData, function (data) {
 				$('#admin-settings-modal').modal('hide');
+				$('#admin-settings-modal').loading('stop');
 			});
+		});
+
+		// Admin toggling if password should be generated automatically or not
+		$('#user-password-auto').on('change', function (e) {
+			if ($(this).attr('checked')) {
+				$(this).val('1');
+				$('#user-password').attr('required', false);
+				$('#user-password').parent().parent().addClass('d-none');
+			} else {
+				$(this).val('0');
+				$('#user-password').attr('required', 'required');
+				$('#user-password').parent().parent().removeClass('d-none');
+			}
 		});
 
 		// Admin creating a user
 		$('#admin-usercreate-form').on('submit', function (e) {
 			var formData = preparePostRequest($(this).serialize());
 			var password = $('#user-password').val();
+			var passwordAuto = $('#user-password-auto').val();
 
 			e.preventDefault();
 
+			$('#admin-users-modal').loading();
 			$('#admin-usercreate-response').addClass('d-none');
 			$('#admin-usercreate-response').removeClass('alert-danger');
 			$('#admin-usercreate-response').removeClass('alert-success');
 			$('#admin-usercreate-response').empty();
 
-			if (validatePassword(password)) {
-				$.post('api/insert/users', formData, function (data) {
-					if (data.length) {
-						$('#admin-usercreate-response').append('User created successfully');
-						$('#admin-usercreate-response').addClass('alert-success');
-						$('#admin-usercreate-response').removeClass('d-none');
-						$('#admin-usercreate-form')[0].reset();
-					}
-				});
-			} else {
+			if ('0' == passwordAuto && !validatePassword(password)) {
 				$('#admin-usercreate-response').append('Please verify password strenght requirements');
 				$('#admin-usercreate-response').addClass('alert-danger');
 				$('#admin-usercreate-response').removeClass('d-none');
+			} else {
+				var msg = 'An error ocurred while creating the user';
+				var alert = 'alert-danger';
+
+				$.post('api/insert/users', formData, function (data) {
+					var insertedUserId = $.parseJSON(data);
+
+					if (insertedUserId) {
+						if (insertedUserId.id) {
+							msg = 'User created successfully';
+							alert = 'alert-success';
+						}
+					}
+
+					$('#admin-usercreate-response').append(msg);
+					$('#admin-usercreate-response').addClass(alert);
+					$('#admin-usercreate-response').removeClass('d-none');
+					$('#admin-usercreate-form')[0].reset();
+					$('#admin-users-modal').loading('stop');
+				});
 			}
 		});
 

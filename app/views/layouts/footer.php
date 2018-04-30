@@ -9,6 +9,7 @@
 		<script src="assets/js/jquery.table2excel.min.js"></script>
 		<script src="assets/js/printThis.js"></script>
 		<script src="assets/js/jquery.stickytableheaders.min.js"></script>
+        <script src="assets/js/jquery.loading.min.js"></script>
         <script src="assets/js/moment.min.js"></script>
     </body>
 </html>

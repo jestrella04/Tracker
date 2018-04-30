@@ -47,10 +47,19 @@
 						</div>
 
 						<div class="form-group row">
+							<div class="col-sm-10 offset-sm-3">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" id="user-password-auto" name="user_password_auto" value="1" checked>
+									<label class="form-check-label" for="user-password-auto">Generate password automatically.</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group row d-none">
 							<label for="user-password" class="col-sm-3 col-form-label">Password:</label>
 
 							<div class="col-sm-9">
-								<input type="password" class="form-control" id="user-password" name="user_password" placeholder="Enter user's password here" required>
+								<input type="password" class="form-control" id="user-password" name="user_password" placeholder="Enter user's password here">
 							</div>
 						</div>
 

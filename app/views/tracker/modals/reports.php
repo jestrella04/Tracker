@@ -64,12 +64,6 @@
 					<p>There is no data to display</p>
 				</div>
 
-				<div id="admin-reports-loading" class="table table-bordered d-none">
-					<div class="loading-animation fa-3x">
-						<i class="fas fa-spinner fa-spin"></i>
-					</div>
-				</div>
-
 				<div id="admin-reports-container" class="d-none">
 					<table id="admin-reports-table" class="table table-bordered table-hover table-sm"></table>
 				</div>

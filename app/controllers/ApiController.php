@@ -57,10 +57,16 @@ class ApiController extends BaseController
         $id = $this->filterString(strtolower($post['user_id']));
         $name = $this->filterString($post['user_name']);
         $email = $this->filterString($post['user_email']);
-        $password = $this->filterString($post['user_password']);
-        $password = password_hash($password, PASSWORD_DEFAULT);
+        $passwordAuto = $this->filterString($post['user_password_auto']);
         $roleId = $this->filterString($post['role_id']);
         $departmentId = $this->filterString($post['department_id']);
+
+        if ('1' == $passwordAuto) {
+            $password = $this->generateStrongRandomPassword(10);
+        } else {
+            $password = $this->filterString($post['user_password']);
+        }
+
         $op = $c->postCreateUser($id, $name, $email, $password, $roleId, $departmentId);
 
         return json_encode($op);

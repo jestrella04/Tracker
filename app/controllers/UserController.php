@@ -57,12 +57,32 @@ class UserController extends BaseController
     public function postCreateUser($id, $name, $email, $password, $roleId, $departmentId)
     {
         if (!empty($id) && !empty($name) && !empty($email) && !empty($password) && !empty($roleId) && !empty($departmentId)) {
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
             $sp = $this->db->prepare('CALL sp_insert_user(?,?,?,?,?,?,@insertedId)');
-            $sp->execute(array($id, $roleId, $departmentId, $name, $email, $password));
+            $sp->execute(array($id, $roleId, $departmentId, $name, $email, $passwordHash));
             $sp->closeCursor();
             $op = $this->db->query('SELECT @insertedId AS id')->fetch();
 
-            if ($op) return $op;
+            if ($op) {
+                $template = 'user-created.html';
+    
+                $replace = array(
+                    '{{USER_NAME}}' => $name,
+                    '{{COMPANY_NAME}}' => $this->settings['company_name']['value'],
+                    '{{NEW_PASSWORD}}' => $password,
+                    '{{NEW_USERID}}' => $id,
+                    '{{CURRENT_YEAR}}' => date('Y')
+                );
+                
+                $toName = $name;
+                $toEmail = $email;
+                $subject = 'Tracker - Welcome to ' . $this->settings['company_name']['value'];
+                $message = prepareEmailTemplate($template, $replace);
+    
+                $this->sendMail($toName, $toEmail, $subject, $message);
+
+                return $op;
+            }
         }
 
         return false;
