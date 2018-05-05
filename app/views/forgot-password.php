@@ -3,14 +3,14 @@
 <div class="container">
 	<form id="password-update-form" class="form-signin" role="form" action="forgot-password" method="post" autocomplete="off">
         <fieldset disabled>
-            <div class="logo text-center"><img src="assets/img/<?= $settings['company_logo']['value'] ?>"></div>
+            <div class="logo text-center"><img src="static/img/<?= $settings['company_logo']['value'] ?>"></div>
             <h2 class="form-signin-heading"><?= $settings['company_name']['value'] ?> Tracker</h2>
             <p class="lead text-center">Password Recovery</p>
             
             <div class="input-group input-group-lg">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="dir-filter-clear">
-                        <i class="fas fa-at"></i>
+                        <i class="fas fa-at fa-fw"></i>
                     </span>
                 </div>
 

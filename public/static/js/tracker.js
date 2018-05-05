@@ -1,3 +1,12 @@
+import '../../../node_modules/jquery/dist/jquery.js';
+import '../../../node_modules/bootstrap/dist/js/bootstrap.js';
+import '../../../node_modules/jquery.filtertable/jquery.filtertable.js';
+import '../../../node_modules/jquery-table2excel/dist/jquery.table2excel.js';
+import '../../../node_modules/print-this/printThis.js';
+import '../../../node_modules/sticky-table-headers/js/jquery.stickytableheaders.js';
+import '../../../node_modules/gasparesganga-jquery-loading-overlay/src/loadingoverlay.js';
+import '../../../node_modules/moment/moment.js';
+
 $(document).ready(function () {
 	// Global variables
 	var trackerUser;
@@ -657,7 +666,7 @@ $(document).ready(function () {
 
 			e.preventDefault();
 
-			$('#admin-reports-modal').loading();
+			$('#admin-reports-modal').LoadingOverlay('show');
 			$('#admin-reports-empty').addClass('d-none');
 			$('#admin-reports-table').empty();
 
@@ -680,7 +689,7 @@ $(document).ready(function () {
 				if (0 === op.length) {
 					$('#admin-reports-empty').removeClass('d-none');
 					$('#admin-reports-container').addClass('d-none');
-					$('#admin-reports-modal').loading('stop');
+					$('#admin-reports-modal').LoadingOverlay('hide');
 
 					$('#reports-excel-button').attr('disabled', 'disabled');
 					$('#reports-print-button').attr('disabled', 'disabled');
@@ -688,7 +697,7 @@ $(document).ready(function () {
 					$('#admin-reports-table').append(op);
 					$('#admin-reports-empty').addClass('d-none');
 					$('#admin-reports-container').removeClass('d-none');
-					$('#admin-reports-modal').loading('stop');
+					$('#admin-reports-modal').LoadingOverlay('hide');
 
 					$('#reports-excel-button').attr('disabled', false);
 					$('#reports-print-button').attr('disabled', false);
@@ -705,11 +714,11 @@ $(document).ready(function () {
 
 			e.preventDefault();
 
-			$('#admin-settings-modal').loading();
+			$('#admin-settings-modal').LoadingOverlay('show');
 
 			$.post('api/update/settings', formData, function (data) {
 				$('#admin-settings-modal').modal('hide');
-				$('#admin-settings-modal').loading('stop');
+				$('#admin-settings-modal').LoadingOverlay('hide');
 			});
 		});
 
@@ -734,7 +743,7 @@ $(document).ready(function () {
 
 			e.preventDefault();
 
-			$('#admin-users-modal').loading();
+			$('#admin-users-modal').LoadingOverlay('show');
 			$('#admin-usercreate-response').addClass('d-none');
 			$('#admin-usercreate-response').removeClass('alert-danger');
 			$('#admin-usercreate-response').removeClass('alert-success');
@@ -762,7 +771,7 @@ $(document).ready(function () {
 					$('#admin-usercreate-response').addClass(alert);
 					$('#admin-usercreate-response').removeClass('d-none');
 					$('#admin-usercreate-form')[0].reset();
-					$('#admin-users-modal').loading('stop');
+					$('#admin-users-modal').LoadingOverlay('hide');
 				});
 			}
 		});

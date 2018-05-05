@@ -1,0 +1,24 @@
+{
+	"name": "tracker_sl",
+	"version": "1.0.0",
+	"private": true,
+	"repository": "https://github.com/jestrella04/Tracker.git",
+	"author": "Jonathan Estrella",
+	"license": "GPLv3",
+	"dependencies": {
+		"bootstrap": "^4.1.1",
+		"gasparesganga-jquery-loading-overlay": "^2.1.2",
+		"jquery": "^3.3.1",
+		"jquery-table2excel": "^1.1.1",
+		"jquery.filtertable": "https://github.com/sunnywalker/jQuery.FilterTable.git",
+		"moment": "^2.22.1",
+		"popper.js": "^1.14.3",
+		"print-this": "^1.12.3",
+		"sticky-table-headers": "^0.1.24"
+	},
+	"devDependencies": {
+		"css-loader": "^0.28.11",
+		"extract-text-webpack-plugin": "^3.0.2",
+		"style-loader": "^0.21.0"
+	}
+}
