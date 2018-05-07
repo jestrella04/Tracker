@@ -4,9 +4,6 @@
 /* API calls */
 /* --------- */
 
-/* Cron jobs */
-
-
 /* Config */
 $app->post('/api/update/settings', 'ApiController:postUpdateConfig');
 

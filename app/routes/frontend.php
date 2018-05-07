@@ -1,10 +1,7 @@
 <?php
 
-use Slim\Http\Request;
-use Slim\Http\Response;
-
 /* ----------------- */
-/* Front-end Screens */
+/* Front-end screens */
 /* ----------------- */
 
 /* Display screens */

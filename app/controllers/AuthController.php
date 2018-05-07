@@ -4,103 +4,103 @@ namespace App\Controllers;
 
 class AuthController extends BaseController
 {
-    private $userId;
-    private $userPassword;
-    private $userPasswordHash;
+	private $userId;
+	private $userPassword;
+	private $userPasswordHash;
 
-    public function setUserId($id)
-    {
-        $this->userId = $id;
-    }
+	public function setUserId($id)
+	{
+		$this->userId = $id;
+	}
 
-    public function setUserPassword($password)
-    {
-        $this->userPassword = $password;
-    }
+	public function setUserPassword($password)
+	{
+		$this->userPassword = $password;
+	}
 
-    public function isValidUser()
-    {
-        $validUserId = $this->container->get('UserController')->getUser($this->userId);
+	public function isValidUser()
+	{
+		$validUserId = $this->container->get('UserController')->getUser($this->userId);
 
-        if (!empty($validUserId)) {
-            if ($validUserId['enabled'] > 0) {
-                $this->userPasswordHash = $this->container->get('UserController')->getUserPasswordHash($this->userId);
-                return true;
-            }
-        }
+		if (!empty($validUserId)) {
+			if ($validUserId['enabled'] > 0) {
+				$this->userPasswordHash = $this->container->get('UserController')->getUserPasswordHash($this->userId);
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public function isValidPassword()
-    {
-        if (password_verify($this->userPassword, $this->userPasswordHash)) {
-            return true;
-        }
+	public function isValidPassword()
+	{
+		if (password_verify($this->userPassword, $this->userPasswordHash)) {
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public function isDefaultPassword()
-    {
-        $validUserId = $this->container->get('UserController')->getUser($_SESSION['tracker_userid']);
+	public function isDefaultPassword()
+	{
+		$validUserId = $this->container->get('UserController')->getUser($_SESSION['tracker_userid']);
 
-        if ($validUserId) {
-            if ($validUserId['password_is_default'] > 0) {
-                return true;
-            }    
-        }
-        
-        return false;
-    }
+		if ($validUserId) {
+			if ($validUserId['password_is_default'] > 0) {
+				return true;
+			}
+		}
 
-    public function isValidSession()
-    {
-        if (isset($_SESSION['tracker_userid'])) {
-            $sessionTimeout = 15 * 60;
-            $sessionDateUpdate = isset($_SESSION['tracker_date_updated']) ? $_SESSION['tracker_date_updated'] : 0;
-            $sessionDateCurrent = time();
+		return false;
+	}
 
-            if (($sessionDateCurrent - $sessionDateUpdate) < $sessionTimeout) {
-                return true;
-            }
-        }
+	public function isValidSession()
+	{
+		if (isset($_SESSION['tracker_userid'])) {
+			$sessionTimeout = 15 * 60;
+			$sessionDateUpdate = isset($_SESSION['tracker_date_updated']) ? $_SESSION['tracker_date_updated'] : 0;
+			$sessionDateCurrent = time();
 
-        return false;
-    }
+			if (($sessionDateCurrent - $sessionDateUpdate) < $sessionTimeout) {
+				return true;
+			}
+		}
 
-    public function isUserAllowedTask($task)
-    {
-        $user = $this->container->get('UserController');
-        $userAllowedTasks = $user->getUserAllowedTasks($this->userId);
+		return false;
+	}
 
-        foreach ($userAllowedTasks as $id => $name) {
-            if (array_search($task, $name, $strict = true)) {
-                return true;
-            }
-        }
+	public function isUserAllowedTask($task)
+	{
+		$user = $this->container->get('UserController');
+		$userAllowedTasks = $user->getUserAllowedTasks($this->userId);
 
-        return false;
-    }
+		foreach ($userAllowedTasks as $id => $name) {
+			if (array_search($task, $name, $strict = true)) {
+				return true;
+			}
+		}
 
-    public function isUserAllowedStatus($status)
-    {
-        $user = $this->container->get('UserController');
-        $userAllowedStatus = $user->getUserAllowedStatus($this->userId);
+		return false;
+	}
 
-        foreach ($userAllowedStatus as $id => $name) {
-            if (array_search($status, $name, $strict = true)) {
-                return true;
-            }
-        }
+	public function isUserAllowedStatus($status)
+	{
+		$user = $this->container->get('UserController');
+		$userAllowedStatus = $user->getUserAllowedStatus($this->userId);
 
-        return false;
-    }
+		foreach ($userAllowedStatus as $id => $name) {
+			if (array_search($status, $name, $strict = true)) {
+				return true;
+			}
+		}
 
-    public function updateSessionActivity()
-    {
-        if (isset($_SESSION['tracker_userid'])) {
-            $_SESSION['tracker_date_updated'] = time();
-        }
-    }
+		return false;
+	}
+
+	public function updateSessionActivity()
+	{
+		if (isset($_SESSION['tracker_userid'])) {
+			$_SESSION['tracker_date_updated'] = time();
+		}
+	}
 }
