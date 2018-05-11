@@ -39,6 +39,7 @@ function safeRedirect($url)
 
 	$dest = $dest . $url;
 	$dest = str_replace('//', '/', $dest);
+	$dest = str_replace('\/', '/', $dest);
 
 	return $dest;
 }

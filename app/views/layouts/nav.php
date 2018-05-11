@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <div class="container">
         <a class="navbar-brand" href="">
-            <img src="static/img/<?= $settings['company_nav']['value'] ?>" width="30" height="30" class="d-inline-block align-top" alt="">
+            <img src="static/img/<?= $settings['company_logo_nav']['value'] ?>" width="30" height="30" class="d-inline-block align-top" alt="">
             <?= $settings['company_name']['value'] ?>
         </a>
         

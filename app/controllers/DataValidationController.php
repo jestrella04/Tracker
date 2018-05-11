@@ -114,7 +114,7 @@ class DataValidationController extends BaseController
 				$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/login'));
 			} else {
 				$this->postFlashMessage('danger', 'An error occurred while resetting your password.');
-				$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/forgot-password')_;
+				$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/forgot-password'));
 			}
 		} else {
            // Redirect to the forgot password page
