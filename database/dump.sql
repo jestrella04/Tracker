@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: Tracker
+-- Host: localhost    Database: tracker_sl
 -- ------------------------------------------------------
--- Server version	5.5.5-10.1.26-MariaDB-0+deb9u1
+-- Server version	5.7.22-0ubuntu18.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -33,6 +33,16 @@ CREATE TABLE `activity` (
   CONSTRAINT `fk_activity_id_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `activity`
+--
+
+LOCK TABLES `activity` WRITE;
+/*!40000 ALTER TABLE `activity` DISABLE KEYS */;
+/*!40000 ALTER TABLE `activity` ENABLE KEYS */;
+UNLOCK TABLES;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -42,14 +52,17 @@ CREATE TABLE `activity` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`jon`@`localhost`*/ /*!50003 TRIGGER `activity_BEFORE_INSERT` BEFORE INSERT ON `activity` FOR EACH ROW BEGIN
-	SET NEW.`date_start` = NOW();
+/*!50003 CREATE*/ /*!50017 DEFINER=`tracker_sl`@`localhost`*/ /*!50003 TRIGGER `activity_BEFORE_INSERT` BEFORE INSERT ON `activity` FOR EACH ROW BEGIN
+
+	SET NEW.`date_start` = NOW();
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 
 --
 -- Table structure for table `config`
@@ -69,6 +82,16 @@ CREATE TABLE `config` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `config`
+--
+
+LOCK TABLES `config` WRITE;
+/*!40000 ALTER TABLE `config` DISABLE KEYS */;
+INSERT INTO `config` VALUES ('company_email','email','Company Email','domain@company.ltd','Address to use in all the outbound emails sent by the application.'),('company_logo','text','Company Logo','logo-main.png','Image file for the company logo. Should be located in \"public/assets/img\" directory.'),('company_logo_favicon','text','Company Favicon','favicon.png','Image file for the company favicon logo. Should be located in \"public/assets/img\" directory.'),('company_logo_nav','text','Company Nav Logo','logo-nav.png','Monochrome image file for the company logo. Should be located in \"public/assets/img\" directory.'),('company_name','text','Company Name','My Company','Name of the company to be used throughout the application.'),('session_timeout','number','Session Timeout','5','Time (in minutes) after a session becomes inactive after an inactivity period.'),('session_timeout_delete','number','Session Timeout Delete','10','Time (in minutes) after inactive sessions are automatically deleted.');
+/*!40000 ALTER TABLE `config` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `custom_data_type`
 --
 
@@ -83,6 +106,16 @@ CREATE TABLE `custom_data_type` (
   UNIQUE KEY `name_UNIQUE` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `custom_data_type`
+--
+
+LOCK TABLES `custom_data_type` WRITE;
+/*!40000 ALTER TABLE `custom_data_type` DISABLE KEYS */;
+INSERT INTO `custom_data_type` VALUES (1,'Extensions','Local extension numbers.'),(2,'Miami Extensions','Miami extension numbers.'),(3,'External Numbers','External phone numbers.'),(4,'GTA','GTA session handling.');
+/*!40000 ALTER TABLE `custom_data_type` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `custom_data_value`
@@ -100,6 +133,16 @@ CREATE TABLE `custom_data_value` (
   CONSTRAINT `fk_data_value_id_data_type` FOREIGN KEY (`id_data_type`) REFERENCES `custom_data_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `custom_data_value`
+--
+
+LOCK TABLES `custom_data_value` WRITE;
+/*!40000 ALTER TABLE `custom_data_value` DISABLE KEYS */;
+INSERT INTO `custom_data_value` VALUES (1,'Basilio Guzmán','530',''),(1,'Daniel Mejía','512',''),(1,'Darnyl Vargas','521',''),(1,'Dorally Jiménez','515',''),(1,'Dulce María Rusch','527',''),(1,'Eduvigis Paulino','516',''),(1,'Edwin Lugo','503',''),(1,'Erickson Checo','531',''),(1,'Gabriela Rodríguez','529',''),(1,'Jennifer Candelario','501',''),(1,'Joan Guzmán','525',''),(1,'Jonathan Estrella','507',''),(1,'Juan Alberto Rodríguez','505',''),(1,'Karina Lagos','506',''),(1,'Manuela Peralta','523',''),(1,'María Hernández','526',''),(1,'Nathanael Aybar','508',''),(1,'Pedro Santos','518',''),(1,'Roberto Cabrera','511',''),(1,'Ruby Morel','519',''),(1,'Scarlette Perdomo','522',''),(1,'Vielka Medina','504',''),(2,'Alysson Guerra','222',''),(2,'Beatriz','212',''),(2,'Christine Speedy','','954-815-6040'),(2,'Christopher Justice','','678-938-1136'),(2,'Danny Domínguez','217','305-608-6550'),(2,'Dave Roberts','','360-513-9238'),(2,'Ervin Salar','206','786-253-2253'),(2,'Everyone (Level II)','607','773-236-7974'),(2,'Gary Smith','','869-766-2273'),(2,'Gene Lage','','678-777-8665'),(2,'German González','210','954-778-1865'),(2,'German González Jr.','224','954-940-2330'),(2,'Hector Miranda','204','305-733-4418'),(2,'Javier Torres','272','786-370-3885'),(2,'Jenisel Rodriguez','213',''),(2,'Joey Orozco','232','786.390.0305'),(2,'Jorge Fernández','252','786-255-9400'),(2,'José Hernández','214','305-310-0003'),(2,'Karl Díaz','','305-788-7989'),(2,'Kelia Rodríguez','215',''),(2,'Linda Chapin','','978-201-6262'),(2,'Mercy Fernández','208',''),(2,'Pamela Farrel','','615-310-9771'),(2,'Paola Báez','219',''),(2,'Polo Pomares','','305-609-5445'),(2,'Receptionist','201',''),(2,'Robert Jones','298',NULL),(2,'Robin Simmons','203','786-999-3249'),(2,'Rudet Fountain','','404-386-9586'),(2,'Sebastian Pacheco','225','786-570-0583'),(2,'Stephen Pineda','233','305-431-3242'),(2,'Steve Brown','','813-493-8488'),(2,'Tom Alas','234',''),(2,'Zoila Sotelo','221',''),(3,'Answering Service','1-305-270-4000',''),(3,'AutoNation Service Desk','1-877-744-2237',''),(3,'CDK Implementation Support','1-866-668-5394',''),(3,'Chase Paymentech (Trx Verification)','1-800-254-9556','Transaction Verification'),(3,'Chase Paymentech (Voice Auth - AMEX)','1-800-555-5707 ','Voice Authorization for AMEX cards.'),(3,'Chase Paymentech (Voice Auth - Discover)','1-800-347-1111','Voice Authorization for Discover cards.'),(3,'Chase Paymentech (Voice Auth - Visa/MC)','1-800-555-5707 ','Voice Authorization for Visa and MC.'),(3,'Customer Care (FD Canada)','1-888-263-1938',''),(3,'Digital Currency Support','1-847-498-9955','Ext. 2'),(3,'EPX (Voice Auth)','1-866-660-7065','Voice Authorization for all cards.'),(3,'EPX Customer Service','1-866-581-5239',''),(3,'FAPS chargeback','1-800-701-2831','Ext. 2672'),(3,'FDC Software Vendor Support','1-866-832-5279',''),(3,'First Data (Trx Verification)','1-866-597-5721','Transaction Verification'),(3,'First Data (Voice Auth)','1-800-228-1122','Voice Authorization for all cards.'),(3,'First Data - Chargebacks (Nashville)','1-888-292-2608','Chargeback information (FD NASHVILLE 434 merchants)'),(3,'First Data - Chargebacks (Omaha)','?1-800-672-5008','Chargeback information (FD OMAHA 518564, 530960490 merchants)'),(3,'North ISO Clover Support','1-844-864-5450',''),(3,'Penske Help Desk','1-877-824-6381',''),(3,'TSYS (Voice Auth)','1-800-228-5882','Voice Authorization for all cards.'),(3,'TSYS Help Desk','1-800-552-8227',''),(3,'TSYS Help Desk (Alt)','1-480-333-7600',''),(3,'TTech','1-877-838-4031',''),(3,'UTA','1-954-431-5256',''),(3,'Vantiv (Trx Verification)','1-877-744-5300','Transaction Verification'),(3,'Vantiv (Voice Auth - AMEX)','1-800-528-2121','Voice Authorization for AMEX.'),(3,'Vantiv (Voice Auth)','1-800-991-9911','Voice Authorization for Visa, MC and Discover.'),(3,'Vantiv - Chargebacks','1-800-667-9573','Chargeback Information'),(3,'Vantiv Help Desk','1-866-622-2390',''),(4,'CS1','','GTA session 1'),(4,'CS2','','GTA session 2'),(4,'CS3','','GTA session 3'),(4,'CS4','','GTA session 4'),(4,'CS5','','GTA session 5'),(4,'CS6','','GTA session 6'),(4,'CS7','','GTA session 7'),(4,'CS8','','GTA session 8');
+/*!40000 ALTER TABLE `custom_data_value` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `department`
@@ -122,6 +165,16 @@ CREATE TABLE `department` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `department`
+--
+
+LOCK TABLES `department` WRITE;
+/*!40000 ALTER TABLE `department` DISABLE KEYS */;
+INSERT INTO `department` VALUES (1,1,'Tech Support','',1),(2,3,'QA','',0),(4,7,'Management','',0),(5,11,'Operations','',0),(6,1,'Training & Implementation','',1),(7,12,'Sales','',0),(11,20,'Batches','',1),(14,22,'Accounting','',0),(15,10,'Payvana','',0),(17,24,'Integrations','',0),(18,25,'Human Resources','',0);
+/*!40000 ALTER TABLE `department` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `department_allowed_status`
 --
 
@@ -140,6 +193,16 @@ CREATE TABLE `department_allowed_status` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `department_allowed_status`
+--
+
+LOCK TABLES `department_allowed_status` WRITE;
+/*!40000 ALTER TABLE `department_allowed_status` DISABLE KEYS */;
+INSERT INTO `department_allowed_status` VALUES (1,1,1),(1,2,1),(1,4,1),(1,5,1),(1,7,1),(1,8,1),(1,10,1),(1,14,1),(1,15,1),(2,2,1),(2,3,1),(2,5,1),(2,7,1),(2,8,1),(2,10,1),(2,14,1),(4,1,1),(4,2,1),(4,4,1),(4,5,1),(4,7,1),(4,8,1),(4,10,1),(4,14,1),(5,5,1),(5,8,1),(5,11,1),(5,14,1),(5,16,1),(5,17,1),(5,18,1),(6,1,1),(6,2,1),(6,4,1),(6,5,1),(6,8,1),(6,10,1),(6,14,1),(6,15,1),(6,23,1),(7,5,1),(7,12,1),(7,14,1),(11,1,1),(11,2,1),(11,4,1),(11,5,1),(11,7,1),(11,8,1),(11,10,1),(11,14,1),(11,15,1),(11,20,1),(14,5,1),(14,8,1),(14,10,1),(14,14,1),(14,22,1),(15,2,1),(15,5,1),(15,8,1),(15,10,1),(15,14,1),(17,2,1),(17,3,1),(17,5,1),(17,7,1),(17,8,1),(17,10,1),(17,14,1),(17,24,1),(18,5,1),(18,8,1),(18,10,1),(18,14,1),(18,25,1);
+/*!40000 ALTER TABLE `department_allowed_status` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `role`
 --
 
@@ -154,6 +217,16 @@ CREATE TABLE `role` (
   UNIQUE KEY `name_UNIQUE` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `role`
+--
+
+LOCK TABLES `role` WRITE;
+/*!40000 ALTER TABLE `role` DISABLE KEYS */;
+INSERT INTO `role` VALUES (1,'Administrator',NULL),(5,'Standard User',NULL),(6,'Tech Support',NULL),(7,'Customer Service',NULL);
+/*!40000 ALTER TABLE `role` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `role_allowed_task`
@@ -172,6 +245,16 @@ CREATE TABLE `role_allowed_task` (
   CONSTRAINT `fk_role_allowed_task_id_task` FOREIGN KEY (`id_task`) REFERENCES `task` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `role_allowed_task`
+--
+
+LOCK TABLES `role_allowed_task` WRITE;
+/*!40000 ALTER TABLE `role_allowed_task` DISABLE KEYS */;
+INSERT INTO `role_allowed_task` VALUES (1,1,1),(1,2,1),(1,3,1),(1,4,1),(1,5,1),(1,6,1),(1,7,1),(1,8,1),(1,9,1),(5,2,1),(6,2,1),(6,3,1);
+/*!40000 ALTER TABLE `role_allowed_task` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `session`
@@ -194,6 +277,16 @@ CREATE TABLE `session` (
   CONSTRAINT `fk_session_id_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `session`
+--
+
+LOCK TABLES `session` WRITE;
+/*!40000 ALTER TABLE `session` DISABLE KEYS */;
+/*!40000 ALTER TABLE `session` ENABLE KEYS */;
+UNLOCK TABLES;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -203,17 +296,23 @@ CREATE TABLE `session` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`jon`@`localhost`*/ /*!50003 TRIGGER `session_BEFORE_INSERT` BEFORE INSERT ON `session` FOR EACH ROW BEGIN
-	IF (NEW.`id_status` <> 9) THEN
-		SET NEW.`date_last_activity` = NOW();
-		SET NEW.`date_last_status_change` = NOW();
-	END IF;
+/*!50003 CREATE*/ /*!50017 DEFINER=`tracker_sl`@`localhost`*/ /*!50003 TRIGGER `session_BEFORE_INSERT` BEFORE INSERT ON `session` FOR EACH ROW BEGIN
+
+	IF (NEW.`id_status` <> 9) THEN
+
+		SET NEW.`date_last_activity` = NOW();
+
+		SET NEW.`date_last_status_change` = NOW();
+
+	END IF;
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 
 --
 -- Table structure for table `status`
@@ -232,6 +331,16 @@ CREATE TABLE `status` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `status`
+--
+
+LOCK TABLES `status` WRITE;
+/*!40000 ALTER TABLE `status` DISABLE KEYS */;
+INSERT INTO `status` VALUES (1,'Available',1,1),(2,'On Training',3,1),(3,'Testing/QA',3,1),(4,'On Call',2,1),(5,'On Lunch',5,1),(7,'Administrative Tasks',4,1),(8,'On Meeting',3,1),(9,'Inactive',6,0),(10,'Other',3,1),(11,'Operations Tasks',4,1),(12,'Sales Tasks',4,1),(14,'On Break',5,1),(15,'Installations',3,1),(16,'Proposals',4,1),(17,'Boarding',4,1),(18,'Workflow',4,1),(19,'Certifications',3,1),(20,'Batches',3,1),(21,'Follow Ups',4,1),(22,'Accounting',4,1),(23,'Implementation',3,1),(24,'Integrations',3,1),(25,'RRHH',4,1);
+/*!40000 ALTER TABLE `status` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `task`
 --
 
@@ -244,8 +353,18 @@ CREATE TABLE `task` (
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `task`
+--
+
+LOCK TABLES `task` WRITE;
+/*!40000 ALTER TABLE `task` DISABLE KEYS */;
+INSERT INTO `task` VALUES (1,'Reports','Access all the available reports.'),(2,'Directory','Access the phone directory.'),(3,'GTA','Allow to use GTA accounts.'),(4,'Change User Status','Allow to change the status for other users.'),(5,'List All','List all users regardless of the department.'),(6,'Manage Users','Allow to create and edit users.'),(7,'Manage Roles','Allow to create, edit and delete roles.'),(8,'Manage Status','Allow to create, edit and delete status.'),(9,'Configuration','Allow to update global application settings.');
+/*!40000 ALTER TABLE `task` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
@@ -274,9 +393,19 @@ CREATE TABLE `user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping routines for database 'Tracker'
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'tracker_sl'
 --
 /*!50003 DROP PROCEDURE IF EXISTS `sp_delete_department` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -286,7 +415,7 @@ CREATE TABLE `user` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_delete_department`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_delete_department`(
 	IN departmentId INT
 )
 BEGIN
@@ -298,7 +427,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_delete_role` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -308,7 +439,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_delete_role`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_delete_role`(
 	IN roleId INT
 )
 BEGIN
@@ -320,7 +451,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_delete_session` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -330,7 +463,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_delete_session`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_delete_session`(
 	IN userId VARCHAR(45)
 )
 BEGIN
@@ -343,7 +476,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_delete_session_inactive` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -353,7 +488,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_delete_session_inactive`()
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_delete_session_inactive`()
 BEGIN
 	DELETE FROM `session` WHERE `id_status` = 9 AND `date_last_activity` < DATE_SUB(NOW(), INTERVAL (SELECT `value` FROM `config` WHERE `id` = 'session_timeout_delete') MINUTE);
 END ;;
@@ -362,7 +497,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_delete_status` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -372,7 +509,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_delete_status`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_delete_status`(
 	IN statusId INT
 )
 BEGIN
@@ -383,7 +520,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_insert_custom_data_type` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -393,7 +532,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_insert_custom_data_type`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_insert_custom_data_type`(
     IN dataTypeName VARCHAR(45),
     IN dataTypeDescr VARCHAR(255),
     OUT insertedId INT
@@ -419,7 +558,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_insert_custom_data_value` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -429,7 +570,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_insert_custom_data_value`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_insert_custom_data_value`(
     IN dataTypeId INT,
     IN dataValueName VARCHAR(45),
     IN dataValueVal VARCHAR(45),
@@ -457,7 +598,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_insert_department` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -467,7 +610,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_insert_department`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_insert_department`(
 	IN statusId INT,
     IN departmentName VARCHAR(45),
     IN departmentDesc VARCHAR(255),
@@ -499,7 +642,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_insert_department_allowed_status` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -509,7 +654,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_insert_department_allowed_status`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_insert_department_allowed_status`(
 	IN departmentId INT,
     IN statusId INT,
     IN enabled TINYINT
@@ -539,7 +684,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_insert_role` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -549,7 +696,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_insert_role`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_insert_role`(
     IN roleName VARCHAR(45),
     IN roleDesc VARCHAR(255),
     OUT insertedId INT
@@ -575,7 +722,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_insert_role_allowed_task` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -585,7 +734,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_insert_role_allowed_task`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_insert_role_allowed_task`(
 	IN roleId INT,
     IN taskId INT,
     IN enabled TINYINT
@@ -615,7 +764,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_insert_session` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -625,7 +776,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_insert_session`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_insert_session`(
 	IN userId VARCHAR(45)
 )
 BEGIN
@@ -667,7 +818,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_insert_status` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -677,7 +830,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_insert_status`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_insert_status`(
     IN statusName VARCHAR(45),
     IN statusPriority INT,
     OUT insertedId INT
@@ -705,7 +858,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_insert_user` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -715,7 +870,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_insert_user`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_insert_user`(
 	IN userId VARCHAR(45),
     IN roleId INT,
     IN departmentId INT,
@@ -757,7 +912,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_activity_daily` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -767,7 +924,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_activity_daily`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_activity_daily`(
 	IN `dateStart` DATE,
     IN `dateEnd` DATE,
     IN `myId` VARCHAR(45)
@@ -850,7 +1007,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_activity_detailed` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -860,7 +1019,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_activity_detailed`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_activity_detailed`(
 	IN dateStart DATE,
     IN dateEnd DATE,
     IN myId VARCHAR(45)
@@ -892,7 +1051,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_activity_range` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -902,7 +1063,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_activity_range`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_activity_range`(
 	IN `dateStart` DATE,
 	IN `dateEnd` DATE,
 	IN `myId` VARCHAR(45)
@@ -975,7 +1136,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_config` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -985,7 +1148,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_config`()
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_config`()
 BEGIN
 	SELECT * FROM `config`;
 END ;;
@@ -994,7 +1157,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_custom_data_value` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1004,7 +1169,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_custom_data_value`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_custom_data_value`(
 	IN myId INT
 )
 BEGIN    
@@ -1021,7 +1186,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_department` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1031,7 +1198,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_department`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_department`(
 	IN myId INT
 )
 BEGIN
@@ -1056,7 +1223,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_department_allowed_status` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1066,7 +1235,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_department_allowed_status`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_department_allowed_status`(
 	IN myId INT
 )
 BEGIN
@@ -1082,7 +1251,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_role` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1092,7 +1263,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_role`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_role`(
 	IN myId INT
 )
 BEGIN
@@ -1114,7 +1285,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_role_allowed_task` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1124,7 +1297,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_role_allowed_task`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_role_allowed_task`(
 	IN myId INT
 )
 BEGIN
@@ -1140,7 +1313,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_session` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1150,7 +1325,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_session`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_session`(
 	IN userId VARCHAR(45)
 )
 BEGIN
@@ -1187,7 +1362,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_session_next_absolute` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1197,7 +1374,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_session_next_absolute`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_session_next_absolute`(
 	OUT maxAbsolute INT
 )
 BEGIN
@@ -1208,7 +1385,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_session_next_ordinal` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1218,7 +1397,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_session_next_ordinal`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_session_next_ordinal`(
 	IN statusId INT,
     OUT maxOrdinal INT
 )
@@ -1235,7 +1414,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_status` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1245,7 +1426,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_status`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_status`(
 	IN myId INT
 )
 BEGIN
@@ -1268,7 +1449,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_task` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1278,7 +1461,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_task`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_task`(
 	IN myId INT
 )
 BEGIN
@@ -1300,7 +1483,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_user` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1310,7 +1495,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_user`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_user`(
 	IN myId VARCHAR(45)
 )
 BEGIN
@@ -1339,7 +1524,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_user_by_email` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1349,7 +1536,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_user_by_email`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_user_by_email`(
 	IN emailAddress VARCHAR(45)
 )
 BEGIN
@@ -1372,7 +1559,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_user_password_hash` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1382,7 +1571,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_select_user_password_hash`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_user_password_hash`(
 	IN userId VARCHAR(45)
 )
 BEGIN
@@ -1393,7 +1582,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_update_activity` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1403,7 +1594,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_update_activity`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_update_activity`(
 	IN userId VARCHAR(45),
 	IN statusId INT
 )
@@ -1422,7 +1613,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_update_config` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1432,7 +1625,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_update_config`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_update_config`(
 	IN configId VARCHAR(45),
     IN configVal VARCHAR(255)
 )
@@ -1444,7 +1637,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_update_custom_data_type` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1454,7 +1649,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_update_custom_data_type`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_update_custom_data_type`(
 	IN dataTypeId INT,
     IN dataTypeName VARCHAR(45),
     IN dataTypeDescr VARCHAR(255)
@@ -1471,7 +1666,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_update_custom_data_value` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1481,7 +1678,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_update_custom_data_value`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_update_custom_data_value`(
 	IN dataTypeId INT,
     IN dataValueName VARCHAR(45),
     IN dataValueVal VARCHAR(45),
@@ -1499,7 +1696,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_update_custom_data_value_clear` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1509,7 +1708,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_update_custom_data_value_clear`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_update_custom_data_value_clear`(
 	IN customDataType INT,
 	IN customDataValue VARCHAR(45)
 )
@@ -1521,7 +1720,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_update_session` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1531,7 +1732,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_update_session`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_update_session`(
 	IN userId VARCHAR(45),
     IN statusId INT
 )
@@ -1551,7 +1752,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_update_session_clean_reorder` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1561,7 +1764,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_update_session_clean_reorder`()
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_update_session_clean_reorder`()
 BEGIN
 	CALL `sp_update_session_set_inactive`();
 	CALL `sp_delete_session_inactive`();
@@ -1574,7 +1777,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_update_session_reorder_queue` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1584,7 +1789,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_update_session_reorder_queue`()
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_update_session_reorder_queue`()
 BEGIN
 	DECLARE done INT DEFAULT 0;
     DECLARE userId VARCHAR(45);
@@ -1616,7 +1821,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_update_session_set_inactive` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1626,7 +1833,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_update_session_set_inactive`()
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_update_session_set_inactive`()
 BEGIN    
     DECLARE done INT DEFAULT 0;
     DECLARE userId VARCHAR(45);
@@ -1654,7 +1861,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_update_session_user_status_change` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1664,7 +1873,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_update_session_user_status_change`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_update_session_user_status_change`(
 	IN userId VARCHAR(45),
     IN statusId INT
 )
@@ -1706,7 +1915,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_update_user_password` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1716,7 +1927,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_update_user_password`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_update_user_password`(
 	IN userId VARCHAR(45),
     IN userPasswordHash VARCHAR(255),
     IN isDefault TINYINT
@@ -1734,7 +1945,9 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_update_user_session_activity` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1744,7 +1957,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`jon`@`localhost` PROCEDURE `sp_update_user_session_activity`(
+CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_update_user_session_activity`(
 	IN userId VARCHAR(45)
 )
 BEGIN
@@ -1755,6 +1968,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -1765,4 +1979,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-23 15:23:00
+-- Dump completed on 2018-05-11 16:53:24

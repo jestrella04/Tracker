@@ -27,3 +27,18 @@ function prepareEmailTemplate($template, $arrayReplace = array())
 		return false;
 	}
 }
+
+function safeRedirect($url)
+{
+	$dest = '';
+	$dir = dirname($_SERVER['SCRIPT_NAME']);
+
+	if (!empty($dir) && '/' !== $dir) {
+		$dest = $dir . '/';
+	}
+
+	$dest = $dest . $url;
+	$dest = str_replace('//', '/', $dest);
+
+	return $dest;
+}

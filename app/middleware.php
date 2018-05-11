@@ -28,7 +28,7 @@ $loggedInMiddleware = function (Request $request, Response $response, $next) {
 			if ('login' == $routeName) {
                 // Update session time and redirect to the home page
 				$auth->updateSessionActivity();
-				$response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/');
+				$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/'));
 			} else {
                 // Update session time and proceed as normal...
 				$auth->updateSessionActivity();
@@ -40,7 +40,7 @@ $loggedInMiddleware = function (Request $request, Response $response, $next) {
 				$response = $next($request, $response);
 			} else {
                 // Redirect to the login page
-				$response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/login');
+				$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/login'));
 			}
 		}
 	} else {

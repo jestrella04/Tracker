@@ -27,21 +27,21 @@ class DataValidationController extends BaseController
 
 			if ($auth->isDefaultPassword()) {
                 // Redirect to the change password page
-				$response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/change-password');
+				$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/change-password'));
 			} else {
                 // Create the session in database before redirect
 				$session = $this->container->get('SessionController');
 				$session->addActiveSession($user['id']);
 
                 // Redirect to the home page
-				$response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/');
+				$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/'));
 			}
 		} else {
             // Invalid login information. Let's add a flash message
 			$this->postFlashMessage('danger', 'Invalid login credentials. Please try again.');
 
             // Redirect back to the login page
-			$response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/login');
+			$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/login'));
 		}
 
 		return $response;
@@ -111,15 +111,15 @@ class DataValidationController extends BaseController
 
 			if ($reset) {
 				$this->postFlashMessage('success', 'Reset password instructions have been sent to your email address.');
-				$response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/login');
+				$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/login'));
 			} else {
 				$this->postFlashMessage('danger', 'An error occurred while resetting your password.');
-				$response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/forgot-password');
+				$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/forgot-password')_;
 			}
 		} else {
            // Redirect to the forgot password page
 			$this->postFlashMessage('danger', 'The provided email address is not associated with any user.');
-			$response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/forgot-password');
+			$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/forgot-password'));
 		}
 
 		return $response;
@@ -137,6 +137,6 @@ class DataValidationController extends BaseController
 		// Destroy the session
 		session_destroy();
 
-		return $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . '/login');
+		return $response->withStatus(302)->withHeader('Location', safeRedirect('/login'));
 	}
 }
