@@ -163,6 +163,15 @@ class ApiController extends BaseController
 		return json_encode($op);
 	}
 
+	public function getOffice(Request $request, Response $response, array $args)
+	{
+		$c = $this->container->get('OfficeController');
+		$id = $args['officeId'];
+		$op = $c->getOffice($id);
+
+		return json_encode($op);
+	}
+	
 	public function getDepartment(Request $request, Response $response, array $args)
 	{
 		$c = $this->container->get('DepartmentController');
@@ -210,6 +219,7 @@ class ApiController extends BaseController
 		$startDate = $this->filterString($post['start_date']);
 		$endDate = $this->filterString($post['end_date']);
 		$userId = $this->filterString($post['user_id']);
+		$officeId = $this->filterString($post['office_id']);
 		$reportType = $this->filterString($post['report_type']);
 
 		if ('daily_summary' == $reportType) {

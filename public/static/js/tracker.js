@@ -263,7 +263,7 @@ $(document).ready(function () {
 		getCurrentSession();
 
 		if (trackerUser) {
-			if (isSessionActive(trackerUser.id)) {	
+			if (isSessionActive(trackerUser.id)) {
 				isValidSession = true;
 			}
 		}
@@ -272,10 +272,9 @@ $(document).ready(function () {
 	}
 
 	// Check if user is in the queue group
-	function isDepartmentInQueue()
-	{
+	function isDepartmentInQueue() {
 		var inqueue = parseInt(trackerUserDept.inqueue);
-		
+
 		if (inqueue > 0) {
 			return true;
 		}
@@ -376,7 +375,7 @@ $(document).ready(function () {
 		}
 
 		var tag = 'tracker';
-		var icon = 'public/img/favicon.png';
+		var icon = 'static/img/favicon.png';
 
 		if (window.Notification && Notification.permission === "granted") {
 			var notification = new Notification(title, {
@@ -418,10 +417,6 @@ $(document).ready(function () {
 		}
 	}
 
-	function numberPad(number) {
-		return (number < 10 ? '0' : '') + number;
-	}
-
 	// Date and time formatting
 	function dateFormat() {
 		var shortDateFormat = 'dd/MM/yyyy';
@@ -436,12 +431,12 @@ $(document).ready(function () {
 		});*/
 
 		$('.relative-date-format').each(function (idx, elem) {
-			var date = $(elem).attr('data-last-update');
+			var date = moment.utc($(elem).attr('data-last-update')).local();
 
 			if ($(elem).is(':input')) {
-				$(elem).val(moment(date).fromNow());
+				$(elem).val(date.fromNow());
 			} else {
-				$(elem).text(moment(date).fromNow());
+				$(elem).text(date.fromNow());
 			}
 		});
 	}
@@ -492,6 +487,7 @@ $(document).ready(function () {
 		$.each(row, function (idx, cell) {
 			op += '		<td>' + String(cell).replace('null', '--') + '</td>';
 		});
+
 		op += '	<tr>';
 
 		return op;
@@ -502,7 +498,7 @@ $(document).ready(function () {
 		return /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/.test(password);
 	}
 
-	// Enable the forms
+	// Tricky way to enforce javascript: enable the login forms after page is loaded
 	$('.form-signin fieldset').attr('disabled', false);
 
 	// Check if the user is logged in
@@ -518,17 +514,25 @@ $(document).ready(function () {
 			getDirectoryInfo();
 		}
 
-		// Populate list of users for reports
+		// Populate list of users/offices for reports
 		if (checkCurrentUserPermission('Reports')) {
 			$('#report-userid').append('<option value="">All</option>');
+			$('#report-officeid').append('<option value="">All</option>');
 
 			$.getJSON('api/get/users', function (json) {
 				$.each(json, function (idx, user) {
 					$('#report-userid').append('<option value="' + user.id + '">' + user.id + '</option>');
 				});
 			});
+
+			$.getJSON('api/get/offices', function (json) {
+				$.each(json, function (idx, office) {
+					$('#report-officeid').append('<option value="' + office.id + '">' + office.name + '</option>');
+				});
+			});
 		} else {
 			$('#report-userid').append('<option>' + trackerUser.id + '</option>');
+			$('#report-officeid').append('<option value="' + trackerUser.id_office + '">' + trackerUser.office_name + '</option>');
 		}
 
 		// Every minute, check session is still active and reload data

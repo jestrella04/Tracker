@@ -17,10 +17,17 @@
 					<form id="admin-reports-form" role="form">
 						<fieldset>
 							<div class="form-row">
-								<div class="col">
+							<div class="col">
 									<div class="form-group">
 										<label for="report-userid">User:</label>
 										<select class="form-control form-control-sm" id="report-userid" name="user_id"></select>
+									</div>
+								</div>
+
+								<div class="col">
+									<div class="form-group">
+										<label for="report-userid">Office:</label>
+										<select class="form-control form-control-sm" id="report-officeid" name="office_id"></select>
 									</div>
 								</div>
 

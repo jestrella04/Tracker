@@ -88,3 +88,7 @@ $container['CustomDataController'] = function ($c) {
 $container['ReportController'] = function ($c) {
 	return new App\Controllers\ReportController($c);
 };
+
+$container['OfficeController'] = function ($c) {
+	return new App\Controllers\OfficeController($c);
+};

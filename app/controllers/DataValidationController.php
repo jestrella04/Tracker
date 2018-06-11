@@ -92,7 +92,7 @@ class DataValidationController extends BaseController
 		$this->postFlashMessage($message[0], $message[1]);
 
         // Redirect the user accordingly
-		$response = $response->withStatus(302)->withHeader('Location', dirname($_SERVER['SCRIPT_NAME']) . $path);
+		$response = $response->withStatus(302)->withHeader('Location', safeRedirect($path));
 
 		return $response;
 	}

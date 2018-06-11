@@ -43,6 +43,10 @@ $app->get('/api/get/departments/{departmentId}', 'ApiController:getDepartment');
 $app->get('/api/get/departments/{departmentId}/status', 'ApiController:getDepartmentStatus');
 $app->get('/api/get/departments', 'ApiController:getDepartment');
 
+/* Offices */
+$app->get('/api/get/offices/{officeId}', 'ApiController:getOffice');
+$app->get('/api/get/offices', 'ApiController:getOffice');
+
 /* Custom data */
 $app->get('/api/get/custom-data/{typeId}', 'ApiController:getCustomData');
 $app->post('/api/update/custom-data-type', 'ApiController:postUpdateCustomDataType');
