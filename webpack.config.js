@@ -16,7 +16,7 @@ module.exports = {
 			}
 		]
 	},
-	entry: './static/js/bundle.js',
+	entry: './static/js/webpack.js',
 	output: {
 		path: __dirname + '/public/static/js',
 		filename: 'bundle.min.js'

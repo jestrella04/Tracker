@@ -478,14 +478,22 @@ $(document).ready(function () {
 		return op;
 	}
 
-	// Repprts table content
+	// Reports table content
 	function getReportTableBody(row) {
 		var op = '';
 
 		op += '	<tr>';
 
 		$.each(row, function (idx, cell) {
-			op += '		<td>' + String(cell).replace('null', '--') + '</td>';
+			cell = String(cell).replace('null', '--');
+
+			if (/((0[1-9]|[12]\d)-(0[1-9]|1[012])|30-(0[13-9]|1[012])|(31-(0[13578]|1[02])))-(19|20)\d\d/g.test(cell)) {
+				op += '		<td>' + moment.utc(cell, 'DD-MM-YYYY').local().format('DD-MM-YYYY') + '</td>';
+			} else if(/^(([1][0-2])|([0][1-9])):[0-5][0-9] (AM|PM)$/gi.test(cell)) {
+				op += '		<td>' + moment.utc(cell, 'hh:mm A').local().format('hh:mm A') + '</td>';
+			} else {
+				op += '		<td>' + cell + '</td>';
+			}
 		});
 
 		op += '	<tr>';
@@ -498,7 +506,19 @@ $(document).ready(function () {
 		return /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/.test(password);
 	}
 
-	// Tricky way to enforce javascript: enable the login forms after page is loaded
+	// Validate valid JSON data
+	function validateJsonString(json) {
+		var parsedJson = $.parseJSON(json);
+
+		if (parsedJson.length) {
+			return true;
+		}
+
+		return false;
+	}
+
+	// Tricky way to enforce javascript:
+	// Enable the login forms only after the page is loaded
 	$('.form-signin fieldset').attr('disabled', false);
 
 	// Check if the user is logged in
@@ -665,7 +685,14 @@ $(document).ready(function () {
 
 		// Admin/User generating a report
 		$('#admin-reports-form').on('submit', function (e) {
-			var formData = preparePostRequest($(this).serialize());
+			var user = $('#report-userid').val();
+			var office = $('#report-officeid').val();
+			var type = $('#report-type').val();
+			var start = moment($('#report-start').val()).utc().format('YYYY-MM-DD HH');
+			var end = moment($('#report-end').val()).utc().format('YYYY-MM-DD HH');
+
+			//var formData = preparePostRequest($(this).serialize());
+			var formData = preparePostRequest('user_id=' + user + '&office_id=' + office + '&report_type=' + type + '&start_date=' + start + '&end_date=' + end);
 			var op = '';
 
 			e.preventDefault();
