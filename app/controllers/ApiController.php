@@ -221,14 +221,7 @@ class ApiController extends BaseController
 		$userId = $this->filterString($post['user_id']);
 		$officeId = $this->filterString($post['office_id']);
 		$reportType = $this->filterString($post['report_type']);
-
-		if ('daily_summary' == $reportType) {
-			$op = $c->getReportDaily($startDate, $endDate, $userId);
-		} elseif ('detailed' == $reportType) {
-			$op = $c->getReportDetailed($startDate, $endDate, $userId);
-		} elseif ('range_summary' == $reportType) {
-			$op = $c->getReportRange($startDate, $endDate, $userId);
-		}
+		$op = $c->getReport($reportType, $startDate, $endDate, $userId, $officeId);
 
 		return json_encode($op);
 	}

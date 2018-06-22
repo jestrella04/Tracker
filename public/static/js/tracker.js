@@ -487,9 +487,9 @@ $(document).ready(function () {
 		$.each(row, function (idx, cell) {
 			cell = String(cell).replace('null', '--');
 
-			if (/((0[1-9]|[12]\d)-(0[1-9]|1[012])|30-(0[13-9]|1[012])|(31-(0[13578]|1[02])))-(19|20)\d\d/g.test(cell)) {
-				op += '		<td>' + moment.utc(cell, 'DD-MM-YYYY').local().format('DD-MM-YYYY') + '</td>';
-			} else if(/^(([1][0-2])|([0][1-9])):[0-5][0-9] (AM|PM)$/gi.test(cell)) {
+			if (/((0[1-9]|1[0-2])\-(0[1-9]|1[0-9]|2[0-9]|3[01])\-\d{4})(\s+)(([0-1][0-9]|[2][0-3]):([0-5][0-9])|24:00:00)/g.test(cell)) {
+				op += '		<td>' + moment.utc(cell, 'MM-DD-YYYY HH:mm').local().format('MM-DD-YYYY') + '</td>';
+			} else if (/^(([1][0-2])|([0][1-9])):[0-5][0-9] (AM|PM)$/gi.test(cell)) {
 				op += '		<td>' + moment.utc(cell, 'hh:mm A').local().format('hh:mm A') + '</td>';
 			} else {
 				op += '		<td>' + cell + '</td>';
@@ -553,6 +553,9 @@ $(document).ready(function () {
 		} else {
 			$('#report-userid').append('<option>' + trackerUser.id + '</option>');
 			$('#report-officeid').append('<option value="' + trackerUser.id_office + '">' + trackerUser.office_name + '</option>');
+
+			$('#report-userid').prop("disabled", true);
+			$('#report-officeid').prop("disabled", true);
 		}
 
 		// Every minute, check session is still active and reload data
