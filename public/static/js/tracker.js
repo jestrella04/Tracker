@@ -18,6 +18,7 @@ $(document).ready(function () {
 	var trackerQueue;
 	var trackerOnlineUsers;
 	var trackerGtaSessions;
+	var trackerCurrentPage;
 
 	// Return the visual badge corresponding to a status priority
 	function getStatusBadge(priority) {
@@ -521,8 +522,10 @@ $(document).ready(function () {
 	// Enable the login forms only after the page is loaded
 	$('.form-signin fieldset').attr('disabled', false);
 
+	trackerCurrentPage = window.location.pathname;
+
 	// Check if the user is logged in
-	if (checkCurrentSession()) {
+	if (!trackerCurrentPage.includes('/login') && checkCurrentSession()) {
 		// User is logged in, get permissions
 		getCurrentUserPermissions();
 

@@ -34,14 +34,12 @@ $loggedInMiddleware = function (Request $request, Response $response, $next) {
 				$auth->updateSessionActivity();
 				$response = $next($request, $response);
 			}
-		} else {
-			if (in_array($routeName, $publicRoutesArray)) {
-                // Redirect to the public route
-				$response = $next($request, $response);
-			} else {
-                // Redirect to the login page
-				$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/login'));
-			}
+		} else if (in_array($routeName, $publicRoutesArray)) {
+			// Redirect to the public route
+			$response = $next($request, $response);
+		} else if ('login' !== $routeName && empty($groups)) {
+			// Redirect to the login page
+			$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/login'));
 		}
 	} else {
 		$response = $this->renderer->render($response->withStatus(404), '404.php');
