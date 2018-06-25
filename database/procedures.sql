@@ -550,7 +550,7 @@ BEGIN
 
 	SELECT
 		t.`id_user`,
-		t.`date_`,
+        t.`date_t`,
 		t.`start_` AS `labor_start`,
 		l.`start_` AS `lunch_start`,
 		l.`end_` AS `lunch_end`,
@@ -563,7 +563,8 @@ BEGIN
 	(
 		SELECT
 			`id_user`,
-			ANY_VALUE(DATE_FORMAT(`date_start`, '%m-%d-%Y %H:%i')) AS `date_`,
+			ANY_VALUE(DATE_FORMAT(`date_start`, '%m-%d-%Y')) AS `date_`,
+            ANY_VALUE(DATE_FORMAT(`date_start`, '%m-%d-%Y %H:%i')) AS `date_t`,
 			ANY_VALUE(DATE_FORMAT(MIN(`date_start`), '%h:%i %p')) AS `start_`,
 			ANY_VALUE(DATE_FORMAT(MAX(`date_end`), '%h:%i %p')) AS `end_`,
 			ANY_VALUE(TIMEDIFF(MAX(`date_end`), MIN(`date_start`))) AS `total_`,
@@ -582,7 +583,7 @@ BEGIN
 	(
 		SELECT
 			`id_user`,
-			ANY_VALUE(DATE_FORMAT(`date_start`, '%m-%d-%Y %H:%i')) AS `date_`,
+			ANY_VALUE(DATE_FORMAT(`date_start`, '%m-%d-%Y')) AS `date_`,
 			ANY_VALUE(DATE_FORMAT(MIN(`date_start`), '%h:%i %p')) AS `start_`,
 			ANY_VALUE(DATE_FORMAT(MAX(`date_end`), '%h:%i %p')) AS `end_`,
 			ANY_VALUE(TIMEDIFF(MAX(`date_end`), MIN(`date_start`))) AS `total_`,
@@ -602,7 +603,7 @@ BEGIN
 	(
 		SELECT
 			`id_user`,
-			ANY_VALUE(DATE_FORMAT(`date_start`, '%m-%d-%Y %H:%i')) AS `date_`,
+			ANY_VALUE(DATE_FORMAT(`date_start`, '%m-%d-%Y')) AS `date_`,
 			ANY_VALUE(SEC_TO_TIME(SUM(TIMESTAMPDIFF(SECOND, `date_start`, `date_end`)))) AS `neto_`
 		FROM `activity`
 		WHERE (userId IS NULL OR `id_user` = userId)
@@ -1572,4 +1573,4 @@ ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-22 11:16:04
+-- Dump completed on 2018-06-25 17:22:27
