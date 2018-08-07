@@ -38,7 +38,7 @@ class DataValidationController extends BaseController
 			}
 		} else {
             // Invalid login information. Let's add a flash message
-			$this->postFlashMessage('danger', 'Invalid login credentials. Please try again.');
+			$this->flash->addMessage('danger', 'Invalid login credentials. Please try again.');
 
             // Redirect back to the login page
 			$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/login'));
@@ -89,7 +89,7 @@ class DataValidationController extends BaseController
 		}
 
         // Post the corresponding flash message
-		$this->postFlashMessage($message[0], $message[1]);
+		$this->flash->addMessage($message[0], $message[1]);
 
         // Redirect the user accordingly
 		$response = $response->withStatus(302)->withHeader('Location', safeRedirect($path));
@@ -110,15 +110,15 @@ class DataValidationController extends BaseController
 			$reset = $user->postResetPassword($validUser['id']);
 
 			if ($reset) {
-				$this->postFlashMessage('success', 'Reset password instructions have been sent to your email address.');
+				$this->flash->addMessage('success', 'Reset password instructions have been sent to your email address.');
 				$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/login'));
 			} else {
-				$this->postFlashMessage('danger', 'An error occurred while resetting your password.');
+				$this->flash->addMessage('danger', 'An error occurred while resetting your password.');
 				$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/forgot-password'));
 			}
 		} else {
            // Redirect to the forgot password page
-			$this->postFlashMessage('danger', 'The provided email address is not associated with any user.');
+			$this->flash->addMessage('danger', 'The provided email address is not associated with any user.');
 			$response = $response->withStatus(302)->withHeader('Location', safeRedirect('/forgot-password'));
 		}
 

@@ -24,4 +24,5 @@ require ROOT_PATH . '/app/routes.php';
 
 // Apply middleware and containers
 $app->add($loggedInMiddleware);
+$app->add($csrfValidationMiddleware);
 $app->add($container->get('csrf'));

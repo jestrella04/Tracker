@@ -1,5 +1,8 @@
 <?php
 
+use Slim\Http\Request;
+use Slim\Http\Response;
+
 // DIC configuration
 $container = $app->getContainer();
 
@@ -29,7 +32,18 @@ $container['db'] = function ($c) {
 
 // CSRF
 $container['csrf'] = function ($c) {
-	return new \Slim\Csrf\Guard;
+	$guard = new \Slim\Csrf\Guard();
+
+	$guard->setFailureCallable(function ($request, $response, $next) {
+		$request = $request->withAttribute('csrf_status', false);
+		return $next($request, $response);
+	});
+
+	return $guard;
+};
+
+$container['flash'] = function () {
+	return new \Slim\Flash\Messages();
 };
 
 // Controllers

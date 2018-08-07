@@ -20,6 +20,7 @@ class BaseController
 		$this->renderer = $this->container->get('renderer');
 		$this->db = $this->container->get('db');
 		$this->csrf = $this->container->get('csrf');
+		$this->flash = $this->container->get('flash');
 		$this->settings = $this->getAppSettings();
 	}
 
@@ -44,34 +45,6 @@ class BaseController
 	protected function getCurrentUserId()
 	{
 		return $_SESSION['tracker_userid'];
-	}
-
-	protected function getFlashMessages()
-	{
-		if (isset($_SESSION['flash_message'])) {
-            // Get message from the session
-			$flash = $_SESSION['flash_message'];
-
-            // Clear message so that it is not available in future loads
-			$_SESSION['flash_message'] = array();
-
-            // Return the capture session message
-			if (is_array($flash) && !empty($flash)) {
-				return $flash;
-			}
-		}
-
-
-		return array();
-	}
-
-	protected function postFlashMessage($type, $message)
-	{
-		if (!isset($_SESSION['flash_message'][$type])) {
-			$_SESSION['flash_message'][$type] = array();
-		}
-
-		array_push($_SESSION['flash_message'][$type], $message);
 	}
 
     // Generates a strong password of N length containing at least one lower case letter,

@@ -16,7 +16,7 @@ class RenderViewController extends BaseController
 		$args['value'] = $request->getAttribute($args['valueKey']);
 
         // Flash messages
-		$args['flashMessages'] = $this->getFlashMessages();
+		$args['flashMessages'] = $this->flash->getMessages();
 
         // Get app settings
 		$args['settings'] = $this->settings;
@@ -33,7 +33,7 @@ class RenderViewController extends BaseController
 		$args['value'] = $request->getAttribute($args['valueKey']);
 
         // Flash messages
-		$args['flashMessages'] = $this->getFlashMessages();
+		$args['flashMessages'] = $this->flash->getMessages();
 
         // Auth controller
 		$auth = $this->container->get('AuthController');
@@ -81,7 +81,7 @@ class RenderViewController extends BaseController
 		$args['value'] = $request->getAttribute($args['valueKey']);
 
         // Flash messages
-		$args['flashMessages'] = $this->getFlashMessages();
+		$args['flashMessages'] = $this->flash->getMessages();
 
         // Get current user
 		$args['userId'] = $this->getCurrentUserId();
@@ -101,7 +101,7 @@ class RenderViewController extends BaseController
 		$args['value'] = $request->getAttribute($args['valueKey']);
 
         // Flash messages
-		$args['flashMessages'] = $this->getFlashMessages();
+		$args['flashMessages'] = $this->flash->getMessages();
 
         // Get app settings
 		$args['settings'] = $this->settings;

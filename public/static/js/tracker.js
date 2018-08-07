@@ -44,10 +44,6 @@ $(document).ready(function () {
 			$('#quicklink-oncall').addClass('d-none');
 			$('#quicklink-available').removeClass('d-none');
 		}
-
-		if ('Available' == span.text()) {
-			li.addClass('list-group-item-warning');
-		}
 	}
 
 	// Reload GoToAssist data
@@ -117,12 +113,19 @@ $(document).ready(function () {
 
 		$.each(trackerOnlineUsers, function (row, session) {
 			var gta;
+			var lastUpdate = moment.utc(session.date_last_status_change).local();
+			var timeDiff = moment().diff(lastUpdate, 'minutes');
+			var onCallWarning = '';
+
+			if (session.id_status == 4 && timeDiff > 10) {
+				onCallWarning = 'list-group-item-warning';
+			}
 
 			if (trackerGtaSessions) {
 				gta = trackerGtaSessions.filter(function (data) { return data.value == session.id_user });
 			}
 
-			onlineUsers += '<li class="list-group-item tracker-online-item">';
+			onlineUsers += '<li class="list-group-item tracker-online-item ' + onCallWarning + '">';
 			onlineUsers += '	<span class="full-name" data-userid="' + session.id_user + '">' + session.user_name + '</span>';
 			onlineUsers += '	<span class="badge badge-status ' + getStatusBadge(session.priority) + ' float-right">' + session.status_name + '</span>';
 
@@ -132,16 +135,13 @@ $(document).ready(function () {
 				}
 			}
 
-			onlineUsers += '	<span class="relative-date-format text-muted float-right" data-last-update="' + session.date_last_status_change + '"></span>';
+			onlineUsers += '	<span class="relative-date-format text-muted float-right">' + lastUpdate.fromNow() + '</span>';
 			onlineUsers += '</li>';
 		});
 
 		$('#active-agents').append(onlineUsers);
 
 		formatUserStatus();
-
-		// Format date and time
-		dateFormat();
 
 		$('#active-agents').trigger('db-updated');
 	}
@@ -332,12 +332,13 @@ $(document).ready(function () {
 		var status;
 
 		$('#admin-change-user-status').empty();
+		$('#admin-submit-user-status').empty();
 
 		$.each(trackerOnlineUsers, function (row, session) {
 			allowedStatus += '<div class="form-group row">';
 			allowedStatus += '	<label for="' + session.id_user + '" class="col-sm-4 col-form-label">' + session.id_user + '</label>';
 			allowedStatus += '	<div class="col-sm-8">';
-			allowedStatus += '		<select id="' + session.id_user + '" class="form-control" name="user_id[' + session.id_user + ']" >';
+			allowedStatus += '		<select id="' + session.id_user + '" class="form-control change-user-status" name="user_id[' + session.id_user + ']">';
 			allowedStatus += '			<option value="0">Logout</option>';
 
 			$.ajax({
@@ -363,6 +364,7 @@ $(document).ready(function () {
 		});
 
 		$('#admin-change-user-status').append(allowedStatus);
+		$('#admin-submit-user-status').trigger('status-updated');
 	}
 
 	// Show notifications on user's desktop
@@ -416,30 +418,6 @@ $(document).ready(function () {
 				}
 			});
 		}
-	}
-
-	// Date and time formatting
-	function dateFormat() {
-		var shortDateFormat = 'dd/MM/yyyy';
-		var longDateFormat = 'dd/MM/yyyy HH:mm:ss';
-
-		/*$(".short-date-format").each(function (idx, elem) {
-
-		});
-
-		$(".long-date-format").each(function (idx, elem) {
-
-		});*/
-
-		$('.relative-date-format').each(function (idx, elem) {
-			var date = moment.utc($(elem).attr('data-last-update')).local();
-
-			if ($(elem).is(':input')) {
-				$(elem).val(date.fromNow());
-			} else {
-				$(elem).text(date.fromNow());
-			}
-		});
 	}
 
 	// Get CSRF token for post requests
@@ -518,10 +496,26 @@ $(document).ready(function () {
 		return false;
 	}
 
+	// Watch for status changes in the sessions manager
+	function triggerStatusUpdate() {
+		$('.change-user-status').on('change', function () {
+			var user = $(this).attr('id');
+			var status = $(this).val();
+			var found = $('#admin-submit-user-status').find('[id=' + user + ']');
+
+			$.each(found, function () {
+				$(this).remove();
+			});
+
+			$('#admin-submit-user-status').append('<input type="text" id="' + user + '" name="user_id[' + user + ']" value="' + status + '">');
+		});
+	}
+
 	// Tricky way to enforce javascript:
 	// Enable the login forms only after the page is loaded
 	$('.form-signin fieldset').attr('disabled', false);
 
+	// Get the current page name
 	trackerCurrentPage = window.location.pathname;
 
 	// Check if the user is logged in
@@ -531,6 +525,7 @@ $(document).ready(function () {
 
 		// Load initial data
 		trackerUpdateAll();
+		triggerStatusUpdate();
 
 		// Out of the trackerUpdateAll to load it just the very first time
 		if (checkCurrentUserPermission('Directory') && $("#dir-modal").length) {
@@ -631,6 +626,11 @@ $(document).ready(function () {
 			}
 		});
 
+		// Admin changing user status before submitting the changes
+		$('#admin-submit-user-status').bind('status-updated', function () {
+			triggerStatusUpdate();
+		});
+
 		/******************************/
 		/* Event driven functionality */
 		/******************************/
@@ -678,7 +678,7 @@ $(document).ready(function () {
 		});
 
 		// Admin updating users status
-		$('#admin-users-form').on('submit', function (e) {
+		$('#admin-users-submit-form').on('submit', function (e) {
 			var formData = preparePostRequest($(this).serialize());
 
 			e.preventDefault();
@@ -687,6 +687,8 @@ $(document).ready(function () {
 				trackerUpdateAll();
 				$('#admin-session-modal').modal('hide');
 			});
+
+			$('#admin-submit-user-status').empty();
 		});
 
 		// Admin/User generating a report

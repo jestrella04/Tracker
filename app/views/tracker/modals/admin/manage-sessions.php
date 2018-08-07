@@ -15,11 +15,15 @@
 				<form id="admin-users-form" role="form">
 					<div id="admin-change-user-status"></div>
 				</form>
+
+				<form id="admin-users-submit-form" role="form" class="d-none">
+					<div id="admin-submit-user-status"></div>
+				</form>
 			</div>
 
 			<div class="modal-footer">
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-				<button type="submit" class="btn btn-primary" form="admin-users-form">Save changes</button>
+				<button type="submit" class="btn btn-primary" form="admin-users-submit-form">Save changes</button>
 			</div>
 		</div>
 	</div>
