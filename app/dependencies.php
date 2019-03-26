@@ -33,6 +33,8 @@ $container['db'] = function ($c) {
 // CSRF
 $container['csrf'] = function ($c) {
 	$guard = new \Slim\Csrf\Guard();
+	
+	$guard->setPersistentTokenMode(true);
 
 	$guard->setFailureCallable(function ($request, $response, $next) {
 		$request = $request->withAttribute('csrf_status', false);

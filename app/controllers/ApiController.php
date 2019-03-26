@@ -60,6 +60,8 @@ class ApiController extends BaseController
 		$passwordAuto = $this->filterString($post['user_password_auto']);
 		$roleId = $this->filterString($post['role_id']);
 		$departmentId = $this->filterString($post['department_id']);
+		$officeId = $this->filterString($post['office_id']);
+		$statusId = $this->filterString($post['status_id']);
 
 		if ('1' == $passwordAuto) {
 			$password = $this->generateStrongRandomPassword(10);
@@ -67,7 +69,7 @@ class ApiController extends BaseController
 			$password = $this->filterString($post['user_password']);
 		}
 
-		$op = $c->postCreateUser($id, $name, $email, $password, $roleId, $departmentId);
+		$op = $c->postCreateUser($id, $name, $email, $password, $roleId, $departmentId, $officeId, $statusId);
 
 		return json_encode($op);
 	}
@@ -124,6 +126,15 @@ class ApiController extends BaseController
 		return json_encode($op);
 	}
 
+	public function getSessionUserStatus(Request $request, Response $response, array $args)
+	{
+		$session = $this->container->get('SessionController');
+		$id = $_SESSION['tracker_userid'];
+		$op = $session->isUserOnline($id);
+
+		return json_encode($op);
+	}
+
 	public function getStatus(Request $request, Response $response, array $args)
 	{
 		$c = $this->container->get('StatusController');
@@ -146,7 +157,14 @@ class ApiController extends BaseController
 
 			$op = array();
 		} else {
-			$userId = $this->filterString($rawUserId);
+			$useSessionUserId = $this->filterString($post['session']);
+
+			if ($useSessionUserId) {
+				$userId = $this->getCurrentUserId();
+			} else {
+				$userId = $this->filterString($rawUserId);
+			}
+			
 			$statusId = $this->filterString($post['status_id']);
 			$op = $c->postUpdateStatus($userId, $statusId);
 		}

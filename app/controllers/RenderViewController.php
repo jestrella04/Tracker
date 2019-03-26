@@ -64,6 +64,10 @@ class RenderViewController extends BaseController
 		$department = $this->container->get('DepartmentController');
 		$args['departmentList'] = $department->getDepartment();
 
+		// Office controller
+		$office = $this->container->get('OfficeController');
+		$args['officeList'] = $office->getOffice();
+
         // Validate session and load view accordingly
 		if ($auth->isDefaultPassword()) {
 			return $this->renderer->render($response, 'change-password.php', $args);

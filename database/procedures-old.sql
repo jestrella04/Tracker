@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: tracker_sl
 -- ------------------------------------------------------
--- Server version	5.7.25-0ubuntu0.18.04.2
+-- Server version	5.7.22-0ubuntu18.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -18,27 +18,6 @@
 --
 -- Dumping routines for database 'tracker_sl'
 --
-/*!50003 DROP FUNCTION IF EXISTS `fx_is_user_online` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`jestrella`@`localhost` FUNCTION `fx_is_user_online`(
-	userId VARCHAR(45)
-) RETURNS int(11)
-BEGIN
-	RETURN (SELECT COUNT(`id_user`) AS `is_online` FROM `session` WHERE `id_user` = userId);
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_delete_department` */;
 ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -414,25 +393,15 @@ CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_insert_session`(
 	IN userId VARCHAR(45)
 )
 BEGIN
-	DECLARE statusId INT;
-	DECLARE userDefaultStatusId INT;
-    DECLARE userCurrentStatus INT;
-    
-    SET statusId = (SELECT `id_status` FROM `user` WHERE `id` = userId);
-    
-    IF statusId > 0 THEN
-		SET userDefaultStatusId = statusId;
-	ELSE
-		SET userDefaultStatusId = (SELECT `id_status` FROM `department` WHERE `id` = (SELECT `id_department` FROM `user` WHERE `id` = userId));
-	END IF;
-    
-    IF EXISTS(SELECT `id_user` FROM `session` WHERE `id_user` = userId) THEN
-		SET userCurrentStatus = (SELECT `id_status` FROM `session` WHERE `id_user` = userId);
+	SET @userDefaultStatusId = (SELECT `id_status` FROM `department` WHERE `id` = (SELECT `id_department` FROM `user` WHERE `id` = userId));
 
-        IF userCurrentStatus = 9 THEN
-            CALL `sp_update_session`(userId, userDefaultStatusId);
-            CALL `sp_update_session_user_status_change`(userId, userDefaultStatusId);
+    IF EXISTS(SELECT `id_user` FROM `session` WHERE `id_user` = userId) THEN
+		SET @userCurrentStatus = (SELECT `id_status` FROM `session` WHERE `id_user` = userId);
+
+        IF @userCurrentStatus = 9 THEN
+            CALL `sp_update_session`(userId, @userDefaultStatusId);
 		END IF;
+
     ELSE
 		INSERT INTO `session`
 		(
@@ -443,11 +412,11 @@ BEGIN
 		VALUES
 		(
 			userId,
-			userDefaultStatusId,
+			@userDefaultStatusId,
             1
         );
         
-        CALL `sp_update_activity`(userId, userDefaultStatusId);
+        CALL `sp_update_activity`(userId, @userDefaultStatusId); 
     END IF;
 END ;;
 DELIMITER ;
@@ -496,6 +465,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_insert_user` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -503,33 +473,23 @@ ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_insert_user`(
 	IN userId VARCHAR(45),
     IN roleId INT,
     IN departmentId INT,
-    IN officeId INT,
-    IN statusId INT,
     IN userName VARCHAR(45),
     IN userEmail VARCHAR(45),
     IN userPassword VARCHAR(255),
     OUT insertedId VARCHAR(45)
 )
 BEGIN
-	DECLARE realStatusId INT;
-
-    IF (statusId > 0) THEN
-		SET realStatusId = statusId;
-    END IF;
-    
 	INSERT INTO `user`
 	(
 		`id`,
 		`id_role`,
 		`id_department`,
-        `id_office`,
-        `id_status`,
 		`name`,
 		`email`,
 		`password`,
@@ -542,8 +502,6 @@ BEGIN
 		userId,
 		roleId,
 		departmentId,
-        officeId,
-        realStatusId,
 		userName,
 		userEmail,
 		userPassword,
@@ -559,6 +517,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_select_activity_daily` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -1226,28 +1185,6 @@ DELIMITER ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_settings_update` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`jestrella`@`localhost` PROCEDURE `sp_settings_update`(
-	IN settingName VARCHAR(40),
-    IN settingValue VARCHAR(255)
-)
-BEGIN
-	UPDATE `settings` SET `value` = settingsValue WHERE `name` = settingName;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_update_activity` */;
 ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -1604,6 +1541,7 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 DROP PROCEDURE IF EXISTS `sp_update_user_session_activity` */;
+ALTER DATABASE `tracker_sl` CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1611,20 +1549,20 @@ ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_update_user_session_activity`(
 	IN userId VARCHAR(45)
 )
 BEGIN
 	UPDATE `session` SET `date_last_activity` = NOW() WHERE `id_user` = userId;
-    SELECT `date_last_activity` FROM `session` WHERE `id_user` = userId;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `tracker_sl` CHARACTER SET utf8 COLLATE utf8_general_ci ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -1635,4 +1573,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-26 16:56:28
+-- Dump completed on 2018-06-25 17:22:27

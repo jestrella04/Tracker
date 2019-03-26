@@ -8,18 +8,6 @@ import '../../../node_modules/gasparesganga-jquery-loading-overlay/src/loadingov
 import '../../../node_modules/moment/moment.js';
 
 $(document).ready(function () {
-	// Global variables
-	var trackerUser;
-	var trackerUserDept;
-	var trackerUserPermissions;
-	var trackerInitialData = 0;
-	var trackerSessionTimer;
-	var trackerNotificationTimer;
-	var trackerQueue;
-	var trackerOnlineUsers;
-	var trackerGtaSessions;
-	var trackerCurrentPage;
-
 	// Return the visual badge corresponding to a status priority
 	function getStatusBadge(priority) {
 		if (1 == priority) return 'badge-success';
@@ -31,10 +19,8 @@ $(document).ready(function () {
 	}
 
 	// Getting the next in line and formatting its status
-	function formatUserStatus() {
-		var li = $('#active-agents li:first-child');
-		var span = $('#active-agents li:first-child .badge-status');
-		var userInfo = $('#active-agents li').children('span[data-userid="' + trackerUser.id + '"]');
+	function formatUserStatus(userId) {
+		var userInfo = $('#active-agents li').children('span[data-userid="' + userId + '"]');
 		var userStatus = $(userInfo).parent().find('.badge-status').text();
 
 		if ('Available' == userStatus) {
@@ -46,31 +32,19 @@ $(document).ready(function () {
 		}
 	}
 
-	// Reload GoToAssist data
-	function getGtaSessions() {
-		$.ajax({
-			url: "api/get/custom-data/4",
-			async: false,
-			dataType: 'json',
-			success: function (json) {
-				trackerGtaSessions = json;
-			}
-		});
-	}
-
 	// Check if current user has a GTA session
-	function checkCurrentUserGTA() {
+	function checkCurrentUserGTA(userId, gtaSessions) {
 		var found = false;
 
-		$.each(trackerGtaSessions, function (idx, gta) {
-			if (gta.value == trackerUser.id) found = true;
+		$.each(gtaSessions, function (idx, gta) {
+			if (gta.value == userId) found = true;
 		});
 
 		return found;
 	}
 
 	// Print GTA sessions
-	function printGtaSessions() {
+	function printGtaSessions(userId, gtaSessions) {
 		var gtaSessionsRadios = '';
 		var gtaSessionsAvailability = '';
 
@@ -80,7 +54,7 @@ $(document).ready(function () {
 		gtaSessionsRadios += '	<label><input type="radio" class="form-check-input" name="value_name" value="">None</label>';
 		gtaSessionsRadios += '</div>';
 
-		$.each(trackerGtaSessions, function (index, gta) {
+		$.each(gtaSessions, function (index, gta) {
 			var badge = 'badge-success';
 			var owned = 'Available';
 			var disabled = '';
@@ -102,16 +76,16 @@ $(document).ready(function () {
 		$('#gta-form-radios').append(gtaSessionsRadios);
 		$('#active-gta').append(gtaSessionsAvailability);
 
-		if (checkCurrentUserGTA()) $('.gta-radio').attr('disabled', 'disabled');
+		if (checkCurrentUserGTA(userId, gtaSessions)) $('.gta-radio').attr('disabled', 'disabled');
 	}
 
 	// Print users currently online
-	function printOnlineUsers() {
-		var onlineUsers = '';
+	function printOnlineUsers(user, onlineUsers, gtaSessions = {}) {
+		var printUsers = '';
 
 		$('#active-agents').empty();
 
-		$.each(trackerOnlineUsers, function (row, session) {
+		$.each(onlineUsers, function (row, session) {
 			var gta;
 			var lastUpdate = moment.utc(session.date_last_status_change).local();
 			var timeDiff = moment().diff(lastUpdate, 'minutes');
@@ -121,44 +95,47 @@ $(document).ready(function () {
 				onCallWarning = 'list-group-item-warning';
 			}
 
-			if (trackerGtaSessions) {
-				gta = trackerGtaSessions.filter(function (data) { return data.value == session.id_user });
+			if (!$.isEmptyObject(gtaSessions)) {
+				gta = gtaSessions.filter(function (data) { return data.value == session.id_user });
 			}
 
-			onlineUsers += '<li class="list-group-item tracker-online-item ' + onCallWarning + '">';
-			onlineUsers += '	<span class="full-name" data-userid="' + session.id_user + '">' + session.user_name + '</span>';
-			onlineUsers += '	<span class="badge badge-status ' + getStatusBadge(session.priority) + ' float-right">' + session.status_name + '</span>';
+			printUsers += '<li class="list-group-item tracker-online-item ' + onCallWarning + '">';
+			printUsers += '	<span class="full-name" data-userid="' + session.id_user + '">' + session.user_name + '</span>';
+			printUsers += '	<span class="badge badge-status ' + getStatusBadge(session.priority) + ' float-right">' + session.status_name + '</span>';
 
 			if (gta) {
 				if (gta.length) {
-					onlineUsers += '	<span class="badge badge-gta badge-primary float-right">' + gta[0].name + '</span>';
+					printUsers += '	<span class="badge badge-gta badge-primary float-right">' + gta[0].name + '</span>';
 				}
 			}
 
-			onlineUsers += '	<span class="relative-date-format text-muted float-right">' + lastUpdate.fromNow() + '</span>';
-			onlineUsers += '</li>';
+			printUsers += '	<span class="relative-date-format text-muted float-right">' + lastUpdate.fromNow() + '</span>';
+			printUsers += '</li>';
 		});
 
-		$('#active-agents').append(onlineUsers);
+		$('#active-agents').append(printUsers);
 
-		formatUserStatus();
+		formatUserStatus(user.id);
 
 		$('#active-agents').trigger('db-updated');
 	}
 
-	// Reload and populate all information
-	function trackerUpdateAll() {
-		if (checkCurrentUserPermission('GTA') && $("#gta-modal").length) {
-			getGtaSessions();
-			printGtaSessions();
-		}
+	// Print phone directory
+	function getDirectoryNumbers(permissions) {
+		if (checkCurrentUserPermission('Directory', permissions) && $("#dir-modal").length) {
+			var dirRequest1 = $.getJSON('api/get/custom-data/1');
+			var dirRequest2 = $.getJSON('api/get/custom-data/2');
+			var dirRequest3 = $.getJSON('api/get/custom-data/3');
 
-		updateSessionActivity();
-		getOnlineUsers();
-		printOnlineUsers();
+			$.when(dirRequest1, dirRequest2, dirRequest3).done(function (local, miami, external) {
+				var directory = {};
 
-		if (checkCurrentUserPermission('Change User Status') && $("#admin-session-modal").length) {
-			getOnlineUsersAllowedStatus();
+				directory.local = local[0];
+				directory.miami = miami[0];
+				directory.external = external[0];
+
+				printDirectoryNumbers(directory);
+			});
 		}
 	}
 
@@ -169,8 +146,8 @@ $(document).ready(function () {
 		$.post('api/update/session/activity', postData);
 	}
 
-	// Get directory phone numbers
-	function getDirectoryInfo() {
+	// Print directory numbers
+	function printDirectoryNumbers(directory) {
 		var localDir = '';
 		var miamiDir = '';
 		var externalDir = '';
@@ -181,130 +158,53 @@ $(document).ready(function () {
 		$('#directory-ext').empty();
 
 		// Local numbers
-		$.getJSON('api/get/custom-data/1', function (json) {
-			$.each(json, function (type, dir) {
-				localDir += '<tr>';
-				localDir += '	<td>' + dir.name + '</td>';
-				localDir += '	<td>' + dir.value + '</td>';
-				localDir += '</tr>';
-			});
-
-			$('#directory-dom').append(localDir);
+		$.each(directory.local, function (type, dir) {
+			localDir += '<tr>';
+			localDir += '	<td>' + dir.name + '</td>';
+			localDir += '	<td>' + dir.value + '</td>';
+			localDir += '</tr>';
 		});
+
+		$('#directory-dom').append(localDir);
 
 		// Miami numbers
-		$.getJSON('api/get/custom-data/2', function (json) {
-			$.each(json, function (type, dir) {
-				miamiDir += '<tr>';
-				miamiDir += '	<td>' + dir.name + '</td>';
-				miamiDir += '	<td>' + dir.value + '</td>';
-				miamiDir += '	<td>' + dir.description + '</td>';
-				miamiDir += '</tr>';
-			});
-
-			$('#directory-mia').append(miamiDir);
+		$.each(directory.miami, function (type, dir) {
+			miamiDir += '<tr>';
+			miamiDir += '	<td>' + dir.name + '</td>';
+			miamiDir += '	<td>' + dir.value + '</td>';
+			miamiDir += '	<td>' + dir.description + '</td>';
+			miamiDir += '</tr>';
 		});
+
+		$('#directory-mia').append(miamiDir);
 
 		// External numbers
-		$.getJSON('api/get/custom-data/3', function (json) {
-			$.each(json, function (type, dir) {
-				externalDir += '<tr>';
-				externalDir += '	<td>' + dir.name + '<br><small>' + dir.description + '</small></td>';
-				externalDir += '	<td>' + dir.value + '</td>';
-				externalDir += '</tr>';
-			});
-
-			$('#directory-ext').append(externalDir);
-		});
-	}
-
-	// Verify session is active in database
-	function isSessionActive(userId) {
-		var found = false;
-
-		getOnlineUsers();
-
-		$.each(trackerOnlineUsers, function (idx, user) {
-			if (userId == user.id_user) {
-				found = true;
-				return false;
-			}
+		$.each(directory.external, function (type, dir) {
+			externalDir += '<tr>';
+			externalDir += '	<td>' + dir.name + '<br><small>' + dir.description + '</small></td>';
+			externalDir += '	<td>' + dir.value + '</td>';
+			externalDir += '</tr>';
 		});
 
-		return found;
-	}
-
-	// Get current session information
-	function getCurrentSession() {
-		$.ajax({
-			url: "api/get/session/user",
-			async: false,
-			dataType: 'json',
-			success: function (json) {
-				trackerUser = json;
-			}
-		});
-
-		if (trackerUser) {
-			$.ajax({
-				url: 'api/get/departments/' + trackerUser.id_department,
-				async: false,
-				dataType: 'json',
-				success: function (json) {
-					trackerUserDept = json;
-				}
-			});
-		}
-	}
-
-	// Verify current session is still active
-	function checkCurrentSession() {
-		var isValidSession = false;
-
-		getCurrentSession();
-
-		if (trackerUser) {
-			if (isSessionActive(trackerUser.id)) {
-				isValidSession = true;
-			}
-		}
-
-		return isValidSession;
-	}
-
-	// Check if user is in the queue group
-	function isDepartmentInQueue() {
-		var inqueue = parseInt(trackerUserDept.inqueue);
-
-		if (inqueue > 0) {
-			return true;
-		}
-
-		return false;
+		$('#directory-ext').append(externalDir);
 	}
 
 	// End the current session
-	function sessionLogout() {
+	function sessionLogout(silent = true) {
+		window.focus();
+
+		if (false == silent) {
+			showNotification('Tracker Session Expired', 'Your Tracker session expired, please log back in.');
+		}
+
 		window.location.replace('logout');
 	}
 
-	// Get current user permissions
-	function getCurrentUserPermissions() {
-		$.ajax({
-			url: "api/get/users/tasks/" + trackerUser.id,
-			async: false,
-			dataType: 'json',
-			success: function (json) {
-				trackerUserPermissions = json;
-			}
-		});
-	}
-
 	// Verify if the current user has an specific permission
-	function checkCurrentUserPermission(task) {
+	function checkCurrentUserPermission(task, permissions) {
 		var found = false;
 
-		$.each(trackerUserPermissions, function (key, val) {
+		$.each(permissions, function (key, val) {
 			if (task == val.task_name) {
 				found = true;
 				return false;
@@ -314,48 +214,25 @@ $(document).ready(function () {
 		return found;
 	}
 
-	// Get users currently online
-	function getOnlineUsers() {
-		$.ajax({
-			url: "api/get/session",
-			async: false,
-			dataType: 'json',
-			success: function (json) {
-				trackerOnlineUsers = json;
-			}
-		});
-	}
-
-	// Get online users allowed status
-	function getOnlineUsersAllowedStatus() {
+	// Get users allowed status
+	function getUsersAllowedStatus(allUsers) {
 		var allowedStatus = '';
-		var status;
 
 		$('#admin-change-user-status').empty();
 		$('#admin-submit-user-status').empty();
 
-		$.each(trackerOnlineUsers, function (row, session) {
+		$.each(allUsers, function (idx, user) {
+			var deptStatus = user.department_info.allowed_status;
+
 			allowedStatus += '<div class="form-group row">';
-			allowedStatus += '	<label for="' + session.id_user + '" class="col-sm-4 col-form-label">' + session.id_user + '</label>';
+			allowedStatus += '	<label for="' + user.id + '" class="col-sm-4 col-form-label">' + user.id + '</label>';
 			allowedStatus += '	<div class="col-sm-8">';
-			allowedStatus += '		<select id="' + session.id_user + '" class="form-control change-user-status" name="user_id[' + session.id_user + ']">';
+			allowedStatus += '		<select id="' + user.id + '" class="form-control change-user-status" name="user_id[' + user.id + ']">';
+			allowedStatus += '			<option value="">-- SELECT --</option>';
 			allowedStatus += '			<option value="0">Logout</option>';
 
-			$.ajax({
-				url: 'api/get/users/status/' + session.id_user,
-				async: false,
-				dataType: 'json',
-				success: function (json) {
-					status = json;
-				}
-			});
-
-			$.each(status, function (id, stat) {
-				if (session.id_status == stat.id_status) {
-					allowedStatus += '			<option value="' + stat.id_status + '" selected="selected">' + stat.status_name + '</option>';
-				} else {
-					allowedStatus += '			<option value="' + stat.id_status + '">' + stat.status_name + '</option>';
-				}
+			$.each(deptStatus, function (id, status) {
+				allowedStatus += '			<option value="' + status.id_status + '">' + status.status_name + '</option>';
 			});
 
 			allowedStatus += '		</select>';
@@ -367,57 +244,44 @@ $(document).ready(function () {
 		$('#admin-submit-user-status').trigger('status-updated');
 	}
 
+	// Populate the list of users/offices for the Reporting tools
+	function getReportUsers(userData, users, offices) {
+		var permissions = userData.role_info.allowed_tasks;
+
+		if (checkCurrentUserPermission('Reports', permissions)) {
+			$('#report-userid').append('<option value="">All</option>');
+			$('#report-officeid').append('<option value="">All</option>');
+
+			$.each(users, function (idx, user) {
+				$('#report-userid').append('<option value="' + user.id + '">' + user.id + '</option>');
+			});
+
+			$.each(offices, function (idx, office) {
+				$('#report-officeid').append('<option value="' + office.id + '">' + office.name + '</option>');
+			});
+		} else {
+			$('#report-userid').append('<option>' + userData.id + '</option>');
+			$('#report-officeid').append('<option value="' + userData.id_office + '">' + userData.office_name + '</option>');
+
+			$('#report-userid').prop("disabled", true);
+			$('#report-officeid').prop("disabled", true);
+		}
+	}
+
 	// Show notifications on user's desktop
-	function desktopNotification(title, body, timeout) {
-		if (window.Notification && Notification.permission !== "granted") {
-			Notification.requestPermission(function (status) {
-				if (Notification.permission !== status) {
-					Notification.permission = status;
-				}
-			});
+	function showNotification(theTitle, theBody, theIcon = '', theTimeout = 5000) {
+		var options = {
+			body: theBody,
+			icon: theIcon
 		}
 
-		var tag = 'tracker';
-		var icon = 'static/img/favicon.png';
+		var notification = new Notification(theTitle, options);
 
-		if (window.Notification && Notification.permission === "granted") {
-			var notification = new Notification(title, {
-				'body': body,
-				'tag': tag,
-				'icon': icon
-			});
+		notification.onclick = function (e) {
+			window.focus();
+		};
 
-			notification.onclick = function (e) {
-				window.focus();
-			};
-			setTimeout(function () {
-				notification.close();
-			}, timeout);
-
-		} else if (window.Notification && Notification.permission !== "denied") {
-			Notification.requestPermission(function (status) {
-
-				if (Notification.permission !== status) {
-					Notification.permission = status;
-				}
-
-				// If the user said okay
-				if (status === "granted") {
-					var notification = new Notification(title, {
-						'body': body,
-						'tag': tag,
-						'icon': icon
-					});
-
-					notification.onclick = function (e) {
-						window.focus();
-					};
-					setTimeout(function () {
-						notification.close();
-					}, timeout);
-				}
-			});
-		}
+		setTimeout(notification.close.bind(notification), theTimeout);
 	}
 
 	// Get CSRF token for post requests
@@ -485,155 +349,87 @@ $(document).ready(function () {
 		return /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/.test(password);
 	}
 
-	// Validate valid JSON data
-	function validateJsonString(json) {
-		var parsedJson = $.parseJSON(json);
-
-		if (parsedJson.length) {
-			return true;
-		}
-
-		return false;
+	// Async Ajax call implementation
+	async function asyncAjaxCall(ajaxUrl) {
+		const result = await $.ajax({
+			url: ajaxUrl,
+			dataType: 'json',
+		});
+	
+		return result;
 	}
 
-	// Watch for status changes in the sessions manager
-	function triggerStatusUpdate() {
-		$('.change-user-status').on('change', function () {
-			var user = $(this).attr('id');
-			var status = $(this).val();
-			var found = $('#admin-submit-user-status').find('[id=' + user + ']');
+	// Get current user information
+	async function getCurrentUserInfo() {
+		const user = await asyncAjaxCall('api/get/session/user');
+		return user;
+	}
 
-			$.each(found, function () {
-				$(this).remove();
-			});
+	// Check if user is online
+	function checkIfOnline() {
+		consoleLog('Checking if user is online');
 
-			$('#admin-submit-user-status').append('<input type="text" id="' + user + '" name="user_id[' + user + ']" value="' + status + '">');
+		$.getJSON('api/get/session/status/user', function(data) {
+			var userStatus = parseInt(data);
+
+			if (0 == userStatus) {
+				sessionLogout(false);
+			};
 		});
 	}
 
-	// Tricky way to enforce javascript:
-	// Enable the login forms only after the page is loaded
-	$('.form-signin fieldset').attr('disabled', false);
+	// Update all tracker data
+	function trackerUpdateAll(user) {
+		consoleLog('Reloading tracker information.');
+		
+		var permissions = user.role_info.allowed_tasks;
+		var onlineUsersRequest = $.getJSON("api/get/session");
 
-	// Get the current page name
-	trackerCurrentPage = window.location.pathname;
+		$.when(onlineUsersRequest).done(function (onlineUsers) {
+			// Print online users and GTA sessions
+			if (checkCurrentUserPermission('GTA', permissions) && $("#gta-modal").length) {
+				var gtaRequest = $.getJSON('api/get/custom-data/4');
 
-	// Check if the user is logged in
-	if (!trackerCurrentPage.includes('/login') && checkCurrentSession()) {
-		// User is logged in, get permissions
-		getCurrentUserPermissions();
-
-		// Load initial data
-		trackerUpdateAll();
-		triggerStatusUpdate();
-
-		// Out of the trackerUpdateAll to load it just the very first time
-		if (checkCurrentUserPermission('Directory') && $("#dir-modal").length) {
-			getDirectoryInfo();
-		}
-
-		// Populate list of users/offices for reports
-		if (checkCurrentUserPermission('Reports')) {
-			$('#report-userid').append('<option value="">All</option>');
-			$('#report-officeid').append('<option value="">All</option>');
-
-			$.getJSON('api/get/users', function (json) {
-				$.each(json, function (idx, user) {
-					$('#report-userid').append('<option value="' + user.id + '">' + user.id + '</option>');
+				$.when(gtaRequest).done(function (gtaSessions) {
+					printGtaSessions(user.id, gtaSessions);
+					printOnlineUsers(user, onlineUsers, gtaSessions);
 				});
-			});
-
-			$.getJSON('api/get/offices', function (json) {
-				$.each(json, function (idx, office) {
-					$('#report-officeid').append('<option value="' + office.id + '">' + office.name + '</option>');
-				});
-			});
-		} else {
-			$('#report-userid').append('<option>' + trackerUser.id + '</option>');
-			$('#report-officeid').append('<option value="' + trackerUser.id_office + '">' + trackerUser.office_name + '</option>');
-
-			$('#report-userid').prop("disabled", true);
-			$('#report-officeid').prop("disabled", true);
-		}
-
-		// Every minute, check session is still active and reload data
-		trackerSessionTimer = setInterval(function () {
-			var currentSession = checkCurrentSession();
-
-			if (currentSession) {
-				trackerUpdateAll();
 			} else {
-				sessionLogout();
-			}
-		}, 60000);
-
-		// Every 5 minutes, display queue order
-		if (isDepartmentInQueue()) {
-			trackerQueue = setInterval(function () {
-				var innerHtml = '\n';
-				var max = 5;
-				var order = $('#active-agents li').find('span:has(.badge-success)');
-				var orderCount = $(order).length;
-
-				if (5 >= orderCount) {
-					max = orderCount;
-				}
-
-				for (var i = 0; i < max; i++) {
-					innerHtml += (i + 1) + '. ' + $(order).eq(i).children('.full-name').text() + '\n';
-				}
-
-				desktopNotification('Now available:', innerHtml, 15000);
-			}, 300000);
-		}
-
-		// Actions triggered every time tracker is updated
-		$('#active-agents').bind('db-updated', function () {
-			// Get the next agent
-			var next = $('#active-agents li:first-child span').attr('data-userid');
-
-			// Get next agent status
-			var status = $('#active-agents li:first-child .badge-status').text();
-
-			// Reset notification timer
-			if (trackerUser.id !== next || 'Available' !== status) {
-				trackerInitialData = 0;
-
-				// Somehow Chrome continues to display notifications
-				// even when the user changes status to not available.
-				// Attempting to clear interval everytime db-updated is
-				// triggered and then initialize it again.
-				clearInterval(trackerNotificationTimer);
-				trackerNotificationTimer = null;
+				printOnlineUsers(user, onlineUsers);
 			}
 
-			// Check for current user availability
-			if (trackerUser.id == next && 'Available' == status) {
-				// If needed, display notification on load
-				if (0 == trackerInitialData) {
-					desktopNotification('Tracker Update', 'Watch out: Next call is yours!', 7000);
-				}
+			// Hide the non active users
+			$('#admin-users-form .form-group').addClass('d-none');
 
-				// Check if there are any reminders already set
-				// If no reminders, remind current user every two minutes
-				if (null == trackerNotificationTimer || 0 == trackerNotificationTimer) {
-					trackerNotificationTimer = setInterval(function () {
-						desktopNotification('Tracker Update', 'Watch out: Next call is yours!', 7000);
-					}, 120000);
-				}
+			$.each(onlineUsers, function(idx, user) {
+				$('#' + user.id_user).val('');
+				$('#' + user.id_user).parent().parent().removeClass('d-none');
+			});
 
-				trackerInitialData++;
-			}
+			// Update session activity date and time
+			updateSessionActivity();
+		});
+	}
+
+	// Events triggering trackerUpdateAll()
+	function triggerTrackerUpdateAll(trackerUser) {
+		// User trying to set himself available by clicking on the quick link
+		$('#quicklink-available').on('click', function () {
+			var postData = preparePostRequest('session=1&status_id=1');
+
+			$.post('api/update/status', postData, function () {
+				trackerUpdateAll(trackerUser);
+			});
 		});
 
-		// Admin changing user status before submitting the changes
-		$('#admin-submit-user-status').bind('status-updated', function () {
-			triggerStatusUpdate();
-		});
+		// User trying to set himself on call by clicking on the quick link
+		$('#quicklink-oncall').on('click', function () {
+			var postData = preparePostRequest('session=1&status_id=4');
 
-		/******************************/
-		/* Event driven functionality */
-		/******************************/
+			$.post('api/update/status', postData, function () {
+				trackerUpdateAll(trackerUser);
+			});
+		});
 
 		// User is willing to change status, let's update it
 		$('#status-update').on('submit', function (e) {
@@ -642,26 +438,8 @@ $(document).ready(function () {
 			e.preventDefault();
 
 			$.post('api/update/status', formData, function () {
-				trackerUpdateAll();
+				trackerUpdateAll(trackerUser);
 				$('#change-status-modal').modal('hide');
-			});
-		});
-
-		// User trying to set himself available by clicking on the quick link
-		$('#quicklink-available').click(function () {
-			var postData = preparePostRequest('user_id=' + trackerUser.id + '&status_id=1');
-
-			$.post('api/update/status', postData, function () {
-				trackerUpdateAll();
-			});
-		});
-
-		// User trying to set himself on call by clicking on the quick link
-		$('#quicklink-oncall').click(function () {
-			var postData = preparePostRequest('user_id=' + trackerUser.id + '&status_id=4');
-
-			$.post('api/update/status', postData, function () {
-				trackerUpdateAll();
 			});
 		});
 
@@ -672,24 +450,93 @@ $(document).ready(function () {
 			e.preventDefault();
 
 			$.post('api/update/custom-data-value', formData, function () {
-				trackerUpdateAll();
+				trackerUpdateAll(trackerUser);
 				$('#gta-modal').modal('hide');
 			});
 		});
 
 		// Admin updating users status
-		$('#admin-users-submit-form').on('submit', function (e) {
-			var formData = preparePostRequest($(this).serialize());
+		$('#admin-users-form').on('submit', function (e) {
+			var formData = preparePostRequest($("#admin-users-form :input").filter(function(index, element) {
+        		return $(element).val() != '';
+    		}).serialize());
 
 			e.preventDefault();
 
 			$.post('api/update/status', formData, function (data) {
-				trackerUpdateAll();
+				trackerUpdateAll(trackerUser);
 				$('#admin-session-modal').modal('hide');
 			});
-
-			$('#admin-submit-user-status').empty();
 		});
+	}
+
+	// Log a message to the browser's console
+	function consoleLog(msg)
+	{
+		console.log(msg);
+	}
+
+	// Request permission to run notifications
+	Notification.requestPermission().then(function(result) {
+		consoleLog('Current notifications status: ' + result + '.');
+	});
+
+	// Enable the login forms only after the page is loaded (Tricky way to enforce javascript)
+	$('.form-signin fieldset').attr('disabled', false);
+
+	// Init variables
+	var trackerCurrentPage = window.location.pathname;
+	var trackerSessionTimer;
+
+	// Check if the user is logged in
+	if (!trackerCurrentPage.includes('/login')) {
+		// Display loading overlay
+		$('body').LoadingOverlay('show');
+
+		// Check if user is online
+		checkIfOnline();
+
+		// Get current user information
+		consoleLog('Grabbing active user information from server session.');
+
+		getCurrentUserInfo().then(function(trackerUser) {
+			var permissions = trackerUser.role_info.allowed_tasks;
+
+			$.when(
+				$.getJSON('api/get/users'),
+				$.getJSON('api/get/offices')
+			).then(function (allUsers, allOffices) {
+				// Populate list of users/offices for reports
+				getReportUsers(trackerUser, allUsers[0], allOffices[0]);
+
+				// Populate the status list for all users
+				if (checkCurrentUserPermission('Change User Status', permissions) && $("#admin-session-modal").length) {
+					getUsersAllowedStatus(allUsers[0]);
+				}
+
+				// Load initial data
+				trackerUpdateAll(trackerUser);
+			});
+
+			// Populate the directory of phone numbers
+			getDirectoryNumbers(permissions);
+
+			// Reload data every minute
+			trackerSessionTimer = setInterval(function () {
+				checkIfOnline();
+				trackerUpdateAll(trackerUser);
+			}, 60000);
+
+			// Hide loading overlay
+			$('body').LoadingOverlay('hide');
+
+			// Events triggering trackerUpdateAll
+			triggerTrackerUpdateAll(trackerUser);
+		});
+
+		/******************************/
+		/* Event driven functionality */
+		/******************************/
 
 		// Admin/User generating a report
 		$('#admin-reports-form').on('submit', function (e) {
@@ -763,7 +610,7 @@ $(document).ready(function () {
 
 		// Admin toggling if password should be generated automatically or not
 		$('#user-password-auto').on('change', function (e) {
-			if ($(this).attr('checked')) {
+			if ($(this).is(':checked')) {
 				$(this).val('1');
 				$('#user-password').attr('required', false);
 				$('#user-password').parent().parent().addClass('d-none');
@@ -771,6 +618,33 @@ $(document).ready(function () {
 				$(this).val('0');
 				$('#user-password').attr('required', 'required');
 				$('#user-password').parent().parent().removeClass('d-none');
+			}
+		});
+
+		// Admin changing the department for a new user
+		$('#department-id').on('change', function () {
+			var departmentId = $(this).val();
+			var statusInput = $('#status-id');
+			var op = '';
+
+			statusInput.empty();
+
+			if (departmentId.length) {
+				statusInput.attr('disabled', false);
+
+				$.when(
+					$.getJSON("api/get/departments/" + departmentId + "/status"),
+				).then(function (data) {
+					op += '<option value="0">Department Default</option>';
+
+					$.each(data, function (idx, status) {
+						op += '<option value="' + status.id_status + '">' + status.status_name + '</option>';
+					});
+
+					statusInput.append(op);
+				});
+			} else {
+				statusInput.attr('disabled', 'disabled');
 			}
 		});
 
@@ -841,6 +715,11 @@ $(document).ready(function () {
 				name: 'Tracker Report',
 				filename: 'TrackerReport' //do not include extension
 			});
+		});
+
+		// User logging out
+		$('#btn-logout').on('click', function () {
+			sessionLogout();
 		});
 	}
 });

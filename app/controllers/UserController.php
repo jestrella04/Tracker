@@ -6,13 +6,35 @@ class UserController extends BaseController
 {
     public function getUser($id = '')
     {
+        $dept = $this->container->get('DepartmentController');
+        $role = $this->container->get('RoleController');
+
         if (!empty($id)) {
             $sp = $this->db->prepare('CALL sp_select_user(?)');
             $sp->execute(array($id));
-            $op = $sp->fetch();
+            $user = $sp->fetch();
+
+            $role->getRole($user['id_role']); // Still don't know why does it only work if this line is present
+            $user['role_info'] = $role->getRole($user['id_role']);
+            $user['role_info']['allowed_tasks'] = $role->getRoleTask($user['id_role']);
+            $user['department_info'] = $dept->getDepartment($user['id_department']);
+            $user['department_info']['allowed_status'] = $dept->getDepartmentStatus($user['id_department']);
+            $op = $user;
         } else {
             $sp = $this->db->query('CALL sp_select_user(NULL)');
-            $op = $sp->fetchAll();
+            $users = $sp->fetchAll();
+
+            for ($i = 0; $i < count($users); $i++) {
+                $user = $users[$i];
+
+                $role->getRole($user['id_role']); // Still don't know why does it only work if this line is present
+                $users[$i]['role_info'] = $role->getRole($user['id_role']);
+                $users[$i]['role_info']['allowed_tasks'] = $role->getRoleTask($user['id_role']);
+                $users[$i]['department_info'] = $dept->getDepartment($user['id_department']);
+                $users[$i]['department_info']['allowed_status'] = $dept->getDepartmentStatus($user['id_department']);
+            }
+
+            $op = $users;
         }
 
         return $op;
@@ -54,12 +76,12 @@ class UserController extends BaseController
         return $userAllowedTasks;
     }
 
-    public function postCreateUser($id, $name, $email, $password, $roleId, $departmentId)
+    public function postCreateUser($id, $name, $email, $password, $roleId, $departmentId, $officeId, $statusId)
     {
         if (!empty($id) && !empty($name) && !empty($email) && !empty($password) && !empty($roleId) && !empty($departmentId)) {
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-            $sp = $this->db->prepare('CALL sp_insert_user(?,?,?,?,?,?,@insertedId)');
-            $sp->execute(array($id, $roleId, $departmentId, $name, $email, $passwordHash));
+            $sp = $this->db->prepare('CALL sp_insert_user(?,?,?,?,?,?,?,?,@insertedId)');
+            $sp->execute(array($id, $roleId, $departmentId, $officeId, $statusId, $name, $email, $passwordHash));
             $sp->closeCursor();
             $op = $this->db->query('SELECT @insertedId AS id')->fetch();
 

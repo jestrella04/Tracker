@@ -10,7 +10,7 @@
 		<meta name="author" content="Jonathan Estrella">
 		<meta name="mobile-web-app-capable" content="yes">
 		<link rel="icon" sizes="196x196" href="static/img/<?= $settings['company_logo_favicon']['value'] ?>" type="image/png">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
         <link href="static/css/bundle.min.css" rel="stylesheet">
 	</head>
 

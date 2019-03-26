@@ -29,6 +29,7 @@ $app->group('/api', function () {
     $this->get('/get/session/user', 'ApiController:getSessionUser');
     $this->post('/update/session/activity', 'ApiController:postUpdateSessionActivity');
     $this->get('/update/session/clean', 'ApiController:getSessionCleanReorder')->setName('session-clean');
+    $this->get('/get/session/status/user', 'ApiController:getSessionUserStatus');
 
     /* Status */
     $this->get('/get/status/{statusId}', 'ApiController:getStatus');

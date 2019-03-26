@@ -31,6 +31,9 @@ class SessionController extends BaseController
 	{
 		$sp = $this->db->prepare('CALL `sp_update_user_session_activity`(?);');
 		$sp->execute(array($id));
+		$op = $sp->fetch();
+
+		return $op;
 	}
 
 	public function removeActiveSession($id)
@@ -47,5 +50,14 @@ class SessionController extends BaseController
 		$sp->execute(array($id, $status));
 
 		$this->updateSessionCleanReorder();
+	}
+
+	public function isUserOnline($id)
+	{
+		$fx = $this->db->prepare('SELECT `fx_is_user_online`(?);');
+		$fx->execute(array($id));
+		$op = $fx->fetchColumn();
+
+		return $op;
 	}
 }

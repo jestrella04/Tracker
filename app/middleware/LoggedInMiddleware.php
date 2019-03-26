@@ -11,8 +11,6 @@ $loggedInMiddleware = function (Request $request, Response $response, $next) {
 	if ($route) {
 		$routeName = $route->getName();
 		$routePath = $request->getUri()->getPath();
-		$methods = $route->getMethods();
-		$arguments = $route->getArguments();
         
 		$publicRoutesArray = array(
 			'login',
@@ -35,7 +33,7 @@ $loggedInMiddleware = function (Request $request, Response $response, $next) {
 		} else if (in_array($routeName, $publicRoutesArray)) {
 			// Redirect to the public route
 			$response = $next($request, $response);
-		} else if (strpos($routePath, 'api/') === 0) {
+		} else if (strpos($routePath, 'api/') === 0 || strpos($routePath, '/api/') === 0) {
 			// Return unauthorized response status
 			$response = $response->withStatus(403);
 		} else if ('login' !== $routeName) {

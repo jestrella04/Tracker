@@ -44,7 +44,7 @@
                 <?php if ($auth->isUserAllowedTask('Configuration') || $auth->isUserAllowedTask('Reports') || $auth->isUserAllowedTask('Manage Users') || $auth->isUserAllowedTask('Change User Status')) : ?>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fab fa-superpowers"></i> Administrator
+                        <i class="fas fa-tools"></i> Administrator
                     </a>
 
                     <div class="dropdown-menu" aria-labelledby="dropdown01">
@@ -78,9 +78,9 @@
 
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="btn btn-outline-danger" href="logout">
+                    <button class="btn btn-outline-danger" id="btn-logout">
                         <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
+                    </button>
                 </li>
             </ul>
         </div>

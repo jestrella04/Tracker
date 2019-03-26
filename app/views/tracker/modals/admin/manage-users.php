@@ -88,6 +88,27 @@
 								</select>
 							</div>
 						</div>
+
+						<div class="form-group row">
+							<label for="office-id" class="col-sm-3 col-form-label">Office:</label>
+
+							<div class="col-sm-9">
+								<select class="form-control" id="office-id" name="office_id" required>
+									<option value="">--- Select Office ---</option>
+									<?php foreach ($officeList as $idx => $office) : ?>
+									<option value="<?= $office['id'] ?>"><?= $office['name'] ?></option>
+									<?php endforeach ?>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="status-id" class="col-sm-3 col-form-label">Default Status:</label>
+
+							<div class="col-sm-9">
+								<select class="form-control" id="status-id" name="status_id" required disabled></select>
+							</div>
+						</div>
 					</fieldset>
 				</form>
 			</div>
