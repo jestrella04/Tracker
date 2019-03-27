@@ -543,10 +543,9 @@ $(document).ready(function () {
 			var user = $('#report-userid').val();
 			var office = $('#report-officeid').val();
 			var type = $('#report-type').val();
-			var start = moment($('#report-start').val()).utc().format('YYYY-MM-DD HH');
-			var end = moment($('#report-end').val()).utc().format('YYYY-MM-DD HH');
+			var start = moment($('#report-start').val()).startOf('day').utc().format('YYYY-MM-DD HH');
+			var end = moment($('#report-end').val()).endOf('day').utc().format('YYYY-MM-DD HH');
 
-			//var formData = preparePostRequest($(this).serialize());
 			var formData = preparePostRequest('user_id=' + user + '&office_id=' + office + '&report_type=' + type + '&start_date=' + start + '&end_date=' + end);
 			var op = '';
 

@@ -6,9 +6,9 @@
 			<h4 class="modal-title">Reporting Tools</h4>
 
 			<div class="btn-group btn-group-sm float-right">
-				<button type="button" class="btn btn-default" id="reports-excel-button" disabled><i class="fas fa-file-excel" title="Export to Excel"></i></button>
-				<button type="button" class="btn btn-default" id="reports-print-button" disabled><i class="fas fa-print" title="Print"></i></button>
-				<button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+				<button type="button" class="btn btn-dark" id="reports-excel-button" disabled><i class="fas fa-file-excel" title="Export to Excel"></i></button>
+				<button type="button" class="btn btn-dark" id="reports-print-button" disabled><i class="fas fa-print" title="Print"></i></button>
+				<button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
 			</div>
 		  </div>
 
