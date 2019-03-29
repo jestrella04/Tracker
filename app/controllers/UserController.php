@@ -14,12 +14,16 @@ class UserController extends BaseController
             $sp->execute(array($id));
             $user = $sp->fetch();
 
-            $role->getRole($user['id_role']); // Still don't know why does it only work if this line is present
-            $user['role_info'] = $role->getRole($user['id_role']);
-            $user['role_info']['allowed_tasks'] = $role->getRoleTask($user['id_role']);
-            $user['department_info'] = $dept->getDepartment($user['id_department']);
-            $user['department_info']['allowed_status'] = $dept->getDepartmentStatus($user['id_department']);
-            $op = $user;
+            if (!empty($user)) {
+                $role->getRole($user['id_role']); // Still don't know why does it only work if this line is present
+                $user['role_info'] = $role->getRole($user['id_role']);
+                $user['role_info']['allowed_tasks'] = $role->getRoleTask($user['id_role']);
+                $user['department_info'] = $dept->getDepartment($user['id_department']);
+                $user['department_info']['allowed_status'] = $dept->getDepartmentStatus($user['id_department']);
+                $op = $user;
+            } else {
+                $op = false;
+            }
         } else {
             $sp = $this->db->query('CALL sp_select_user(NULL)');
             $users = $sp->fetchAll();
