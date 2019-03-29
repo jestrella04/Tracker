@@ -6,6 +6,9 @@
 	"author": "Jonathan Estrella",
 	"license": "GPLv3",
 	"dependencies": {
+		
+	},
+	"devDependencies": {
 		"bootstrap": "^4.1.1",
 		"gasparesganga-jquery-loading-overlay": "^2.1.2",
 		"jquery": "^3.3.1",
@@ -14,11 +17,15 @@
 		"moment": "^2.22.1",
 		"popper.js": "^1.14.3",
 		"print-this": "^1.12.3",
-		"sticky-table-headers": "^0.1.24"
-	},
-	"devDependencies": {
+		"sticky-table-headers": "^0.1.24",
 		"css-loader": "^0.28.11",
-		"extract-text-webpack-plugin": "^3.0.2",
-		"style-loader": "^0.21.0"
-	}
+		"mini-css-extract-plugin": "^0.5.0",
+		"style-loader": "^0.21.0",
+		"webpack": "^4.29.6",
+		"webpack-cli": "^3.3.0"
+	},
+	"scripts": {
+        "build-dev": "composer install && yarn install && webpack",
+        "build-prod": "webpack -p && composer install --no-dev --optimize-autoloader && NODE_ENV=production yarn install"
+    }
 }

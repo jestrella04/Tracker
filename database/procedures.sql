@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: tracker_sl
 -- ------------------------------------------------------
--- Server version	5.7.25-0ubuntu0.18.04.2
+-- Server version	5.7.25-0ubuntu0.18.10.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -573,13 +573,12 @@ CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_activity_daily`(
 	IN `dateStart` DATE,
     IN `dateEnd` DATE,
     IN `myId` VARCHAR(45),
-    IN `myOfficeId` INT
+    IN `myOfficeId` INT,
+    IN `utcOffset` CHAR(6)
 )
 BEGIN
 	DECLARE userId VARCHAR(45);
     DECLARE officeId INT;
-
-	SET @endDate = DATE_ADD(dateEnd, INTERVAL 1 DAY);
 
     IF (NOT ISNULL(myId)) THEN
 		SET userId = myId;
@@ -590,8 +589,8 @@ BEGIN
 	END IF;
 
 	SELECT
-		t.`id_user`,
-        t.`date_t`,
+		t.`id_user` AS `user`,
+        t.`date_` AS `date`,
 		t.`start_` AS `labor_start`,
 		l.`start_` AS `lunch_start`,
 		l.`end_` AS `lunch_end`,
@@ -604,19 +603,18 @@ BEGIN
 	(
 		SELECT
 			`id_user`,
-			ANY_VALUE(DATE_FORMAT(`date_start`, '%m-%d-%Y')) AS `date_`,
-            ANY_VALUE(DATE_FORMAT(`date_start`, '%m-%d-%Y %H:%i')) AS `date_t`,
-			ANY_VALUE(DATE_FORMAT(MIN(`date_start`), '%h:%i %p')) AS `start_`,
-			ANY_VALUE(DATE_FORMAT(MAX(`date_end`), '%h:%i %p')) AS `end_`,
+			ANY_VALUE(DATE_FORMAT(convert_tz(`date_start`, '+00:00', utcOffset), '%m-%d-%Y')) AS `date_`,
+			ANY_VALUE(DATE_FORMAT(MIN(convert_tz(`date_start`, '+00:00', utcOffset)), '%h:%i %p')) AS `start_`,
+			ANY_VALUE(DATE_FORMAT(MAX(convert_tz(`date_end`, '+00:00', utcOffset)), '%h:%i %p')) AS `end_`,
 			ANY_VALUE(TIMEDIFF(MAX(`date_end`), MIN(`date_start`))) AS `total_`,
 			ANY_VALUE(SEC_TO_TIME(SUM(TIMESTAMPDIFF(SECOND, `date_start`, `date_end`)))) AS `neto_`
 		FROM `activity`
 		WHERE (userId IS NULL OR `id_user` = userId)
         AND (officeId IS NULL OR `id_office` = officeId)
-		AND `date_start` AND `date_end` BETWEEN dateStart AND @endDate
+		AND `date_start` > convert_tz(dateStart, utcOffset, '+00:00')
+		AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
 		AND `date_end` IS NOT NULL
-		GROUP BY `id_user`, DATE(`date_start`)
-		ORDER BY ANY_VALUE(`date_start`), `id_user`
+		GROUP BY `id_user`, DATE(convert_tz(`date_start`, '+00:00', utcOffset))
 	)
 	AS t
 
@@ -624,18 +622,19 @@ BEGIN
 	(
 		SELECT
 			`id_user`,
-			ANY_VALUE(DATE_FORMAT(`date_start`, '%m-%d-%Y')) AS `date_`,
-			ANY_VALUE(DATE_FORMAT(MIN(`date_start`), '%h:%i %p')) AS `start_`,
-			ANY_VALUE(DATE_FORMAT(MAX(`date_end`), '%h:%i %p')) AS `end_`,
+			ANY_VALUE(DATE_FORMAT(convert_tz(`date_start`, '+00:00', utcOffset), '%m-%d-%Y')) AS `date_`,
+			ANY_VALUE(DATE_FORMAT(MIN(convert_tz(`date_start`, '+00:00', utcOffset)), '%h:%i %p')) AS `start_`,
+			ANY_VALUE(DATE_FORMAT(MAX(convert_tz(`date_end`, '+00:00', utcOffset)), '%h:%i %p')) AS `end_`,
 			ANY_VALUE(TIMEDIFF(MAX(`date_end`), MIN(`date_start`))) AS `total_`,
 			ANY_VALUE(SEC_TO_TIME(SUM(TIMESTAMPDIFF(SECOND, `date_start`, `date_end`)))) AS `neto_`
 		FROM `activity`
 		WHERE (userId IS NULL OR `id_user` = userId)
         AND (officeId IS NULL OR `id_office` = officeId)
-		AND`date_start` AND `date_end` BETWEEN dateStart AND @endDate
-		AND `id_status` = 5 AND `date_end` IS NOT NULL
-		GROUP BY `id_user`, DATE(`date_start`)
-		ORDER BY ANY_VALUE(`date_start`), `id_user`
+		AND `date_start` > convert_tz(dateStart, utcOffset, '+00:00')
+		AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
+		AND `id_status` = 5
+        AND `date_end` IS NOT NULL
+		GROUP BY `id_user`, DATE(convert_tz(`date_start`, '+00:00', utcOffset))
 	)
 	AS l
 	ON t.`id_user` = l.`id_user` AND t.`date_` = l.`date_`
@@ -644,18 +643,20 @@ BEGIN
 	(
 		SELECT
 			`id_user`,
-			ANY_VALUE(DATE_FORMAT(`date_start`, '%m-%d-%Y')) AS `date_`,
+            ANY_VALUE(DATE_FORMAT(convert_tz(`date_start`, '+00:00', utcOffset), '%m-%d-%Y')) AS `date_`,
 			ANY_VALUE(SEC_TO_TIME(SUM(TIMESTAMPDIFF(SECOND, `date_start`, `date_end`)))) AS `neto_`
 		FROM `activity`
 		WHERE (userId IS NULL OR `id_user` = userId)
         AND (officeId IS NULL OR `id_office` = officeId)
-		AND `date_start` AND `date_end` BETWEEN dateStart AND @endDate
-		AND `id_status` = 14 AND `date_end` IS NOT NULL
-		GROUP BY `id_user`, DATE(`date_start`)
-		ORDER BY ANY_VALUE(`date_start`), `id_user`
+		AND `date_start` > convert_tz(dateStart, utcOffset, '+00:00')
+		AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
+		AND `id_status` = 14
+        AND `date_end` IS NOT NULL
+		GROUP BY `id_user`, DATE(convert_tz(`date_start`, '+00:00', utcOffset))
 	)
 	AS b
-	ON l.`id_user` = b.`id_user` AND l.`date_` = b.`date_`;
+	ON l.`id_user` = b.`id_user` AND l.`date_` = b.`date_`
+    ORDER BY ANY_VALUE(`date`), `user`;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -673,17 +674,16 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_activity_detailed`(
-	IN dateStart DATE,
-    IN dateEnd DATE,
-    IN myId VARCHAR(45),
-    IN myOfficeId INT
+	IN `dateStart` DATE,
+    IN `dateEnd` DATE,
+    IN `myId` VARCHAR(45),
+    IN `myOfficeId` INT,
+    IN `utcOffset` CHAR(6)
 )
 BEGIN
 	DECLARE userId VARCHAR(45);
     DECLARE officeId INT;
     
-    SET @endDate = DATE_ADD(dateEnd, INTERVAL 1 DAY);
-
     IF (NOT ISNULL(myId)) THEN
 		SET userId = myId;
     END IF;
@@ -695,14 +695,15 @@ BEGIN
 	SELECT
 		`id_user`,
 		(SELECT `name` FROM `status` WHERE `status`.`id` = `id_status`) AS `status_name`,
-		DATE_FORMAT(`date_start`, '%m-%d-%Y %H:%i') AS `date_`,
-		DATE_FORMAT(`date_start`, '%h:%i %p') AS `start_`,
-		DATE_FORMAT(`date_end`, '%h:%i %p') AS `end_`,
+		DATE_FORMAT(convert_tz(`date_start`, '+00:00', utcOffset), '%m-%d-%Y') AS `date_`,
+		DATE_FORMAT(convert_tz(`date_start`, '+00:00', utcOffset), '%h:%i %p') AS `start_`,
+		DATE_FORMAT(convert_tz(`date_end`, '+00:00', utcOffset), '%h:%i %p') AS `end_`,
 		TIMEDIFF(`date_end`, `date_start`) AS `total_`
 	FROM `activity`
 	WHERE (userId IS NULL OR `id_user` = userId)
 	AND (officeId IS NULL OR `id_office` = officeId)
-	AND `date_start` AND `date_end` BETWEEN dateStart AND @endDate
+	AND `date_start` > convert_tz(dateStart, utcOffset, '+00:00')
+	AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
 	AND `date_end` IS NOT NULL
 	ORDER BY `date_start`, `id_user`;
 END ;;
@@ -725,14 +726,13 @@ CREATE DEFINER=`tracker_sl`@`localhost` PROCEDURE `sp_select_activity_range`(
 	IN `dateStart` DATE,
 	IN `dateEnd` DATE,
 	IN `myId` VARCHAR(45),
-    IN `myOfficeId` INT
+    IN `myOfficeId` INT,
+    IN `utcOffset` CHAR(6)
 )
 BEGIN
 	DECLARE userId VARCHAR(45);
     DECLARE officeId INT;
     
-    SET @endDate = DATE_ADD(dateEnd, INTERVAL 1 DAY);
-
     IF (NOT ISNULL(myId)) THEN
 		SET userId = myId;
     END IF;
@@ -751,12 +751,12 @@ BEGIN
 	(
 		SELECT
 			`id_user`,
-			SEC_TO_TIME(SUM(TIMESTAMPDIFF(SECOND,
-			`date_start`, `date_end`))) AS `neto_`
+			SEC_TO_TIME(SUM(TIMESTAMPDIFF(SECOND, `date_start`, `date_end`))) AS `neto_`
 		FROM `activity`
 		WHERE (userId IS NULL OR `id_user` = userId)
         AND (officeId IS NULL OR `id_office` = officeId)
-        AND `date_start` AND `date_end` BETWEEN dateStart AND @endDate
+        AND `date_start` > convert_tz(dateStart, utcOffset, '+00:00')
+		AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
         AND `date_end` IS NOT NULL
 		GROUP BY `id_user`
 		ORDER BY `id_user`
@@ -767,14 +767,15 @@ BEGIN
 	(
 		SELECT
 			`id_user`,
-			TIMEDIFF(MAX(`date_end`),
-			MIN(`date_start`)) AS `total_`,
+			TIMEDIFF(MAX(`date_end`), MIN(`date_start`)) AS `total_`,
 			SEC_TO_TIME(SUM(TIMESTAMPDIFF(SECOND, `date_start`, `date_end`))) AS `neto_`
 		FROM `activity`
 		WHERE (userId IS NULL OR `id_user` = userId)
         AND (officeId IS NULL OR `id_office` = officeId)
-        AND `date_start` AND `date_end` BETWEEN dateStart AND @endDate
-        AND `id_status` = 5 AND `date_end` IS NOT NULL
+        AND `date_start` > convert_tz(dateStart, utcOffset, '+00:00')
+		AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
+        AND `id_status` = 5
+        AND `date_end` IS NOT NULL
 		GROUP BY `id_user`
 		ORDER BY `id_user`
 	)
@@ -789,8 +790,10 @@ BEGIN
 		FROM `activity`
 		WHERE (userId IS NULL OR `id_user` = userId)
         AND (officeId IS NULL OR `id_office` = officeId)
-        AND `date_start` AND `date_end` BETWEEN dateStart AND @endDate
-        AND `id_status` = 14 AND `date_end` IS NOT NULL
+        AND `date_start` > convert_tz(dateStart, utcOffset, '+00:00')
+		AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
+        AND `id_status` = 14
+        AND `date_end` IS NOT NULL
 		GROUP BY `id_user`
 		ORDER BY `id_user`
 	)
@@ -1635,4 +1638,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-26 16:56:28
+-- Dump completed on 2019-03-28 17:47:49

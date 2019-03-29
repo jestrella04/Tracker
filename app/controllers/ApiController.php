@@ -239,7 +239,8 @@ class ApiController extends BaseController
 		$userId = $this->filterString($post['user_id']);
 		$officeId = $this->filterString($post['office_id']);
 		$reportType = $this->filterString($post['report_type']);
-		$op = $c->getReport($reportType, $startDate, $endDate, $userId, $officeId);
+		$utcOffset = $this->filterString($post['utc_offset']);
+		$op = $c->getReport($reportType, $startDate, $endDate, $utcOffset, $userId, $officeId);
 
 		return json_encode($op);
 	}
