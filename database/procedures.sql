@@ -611,8 +611,7 @@ BEGIN
 		FROM `activity`
 		WHERE (userId IS NULL OR `id_user` = userId)
         AND (officeId IS NULL OR `id_office` = officeId)
-		AND `date_start` > convert_tz(dateStart, utcOffset, '+00:00')
-		AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
+		AND DATE(`date_start`) BETWEEN DATE(convert_tz(dateStart, utcOffset, '+00:00')) AND DATE(convert_tz(dateEnd, utcOffset, '+00:00'))
 		AND `date_end` IS NOT NULL
 		GROUP BY `id_user`, DATE(convert_tz(`date_start`, '+00:00', utcOffset))
 	)
@@ -630,8 +629,7 @@ BEGIN
 		FROM `activity`
 		WHERE (userId IS NULL OR `id_user` = userId)
         AND (officeId IS NULL OR `id_office` = officeId)
-		AND `date_start` > convert_tz(dateStart, utcOffset, '+00:00')
-		AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
+		AND DATE(`date_start`) BETWEEN DATE(convert_tz(dateStart, utcOffset, '+00:00')) AND DATE(convert_tz(dateEnd, utcOffset, '+00:00'))
 		AND `id_status` = 5
         AND `date_end` IS NOT NULL
 		GROUP BY `id_user`, DATE(convert_tz(`date_start`, '+00:00', utcOffset))
@@ -648,15 +646,14 @@ BEGIN
 		FROM `activity`
 		WHERE (userId IS NULL OR `id_user` = userId)
         AND (officeId IS NULL OR `id_office` = officeId)
-		AND `date_start` > convert_tz(dateStart, utcOffset, '+00:00')
-		AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
+		AND DATE(`date_start`) BETWEEN DATE(convert_tz(dateStart, utcOffset, '+00:00')) AND DATE(convert_tz(dateEnd, utcOffset, '+00:00'))
 		AND `id_status` = 14
         AND `date_end` IS NOT NULL
 		GROUP BY `id_user`, DATE(convert_tz(`date_start`, '+00:00', utcOffset))
 	)
 	AS b
 	ON l.`id_user` = b.`id_user` AND l.`date_` = b.`date_`
-    ORDER BY ANY_VALUE(`date`), `user`;
+    ORDER BY DATE(`date`), `user`;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -702,10 +699,9 @@ BEGIN
 	FROM `activity`
 	WHERE (userId IS NULL OR `id_user` = userId)
 	AND (officeId IS NULL OR `id_office` = officeId)
-	AND `date_start` > convert_tz(dateStart, utcOffset, '+00:00')
-	AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
+    AND DATE(`date_start`) BETWEEN DATE(convert_tz(dateStart, utcOffset, '+00:00')) AND DATE(convert_tz(dateEnd, utcOffset, '+00:00'))
 	AND `date_end` IS NOT NULL
-	ORDER BY `date_start`, `id_user`;
+	ORDER BY DATE(`date_start`), `id_user`;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -755,8 +751,7 @@ BEGIN
 		FROM `activity`
 		WHERE (userId IS NULL OR `id_user` = userId)
         AND (officeId IS NULL OR `id_office` = officeId)
-        AND `date_start` > convert_tz(dateStart, utcOffset, '+00:00')
-		AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
+        AND DATE(`date_start`) BETWEEN DATE(convert_tz(dateStart, utcOffset, '+00:00')) AND DATE(convert_tz(dateEnd, utcOffset, '+00:00'))
         AND `date_end` IS NOT NULL
 		GROUP BY `id_user`
 		ORDER BY `id_user`
@@ -772,8 +767,8 @@ BEGIN
 		FROM `activity`
 		WHERE (userId IS NULL OR `id_user` = userId)
         AND (officeId IS NULL OR `id_office` = officeId)
-        AND `date_start` > convert_tz(dateStart, utcOffset, '+00:00')
-		AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
+        AND `date_start` BETWEEN convert_tz(dateStart, utcOffset, '+00:00') AND convert_tz(dateEnd, utcOffset, '+00:00')
+		#AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
         AND `id_status` = 5
         AND `date_end` IS NOT NULL
 		GROUP BY `id_user`
@@ -790,8 +785,8 @@ BEGIN
 		FROM `activity`
 		WHERE (userId IS NULL OR `id_user` = userId)
         AND (officeId IS NULL OR `id_office` = officeId)
-        AND `date_start` > convert_tz(dateStart, utcOffset, '+00:00')
-		AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
+        AND `date_start` BETWEEN convert_tz(dateStart, utcOffset, '+00:00') AND convert_tz(dateEnd, utcOffset, '+00:00')
+		#AND `date_end` < convert_tz(dateEnd, utcOffset, '+00:00')
         AND `id_status` = 14
         AND `date_end` IS NOT NULL
 		GROUP BY `id_user`
@@ -1638,4 +1633,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-28 17:47:49
+-- Dump completed on 2019-04-01 12:43:53

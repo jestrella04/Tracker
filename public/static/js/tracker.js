@@ -480,9 +480,9 @@ $(document).ready(function () {
 	// Init variables
 	var trackerCurrentPage = window.location.pathname;
 	var trackerSessionTimer;
-
+	
 	// Check if the user is logged in
-	if (!trackerCurrentPage.includes('/login')) {
+	if (!trackerCurrentPage.includes('/login') && !trackerCurrentPage.includes('/forgot-password') && !trackerCurrentPage.includes('/change-password')) {
 		// Display loading overlay
 		$('body').LoadingOverlay('show');
 
